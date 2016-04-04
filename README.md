@@ -1,5 +1,5 @@
 # 欢迎来到陈燕山的博客目录
-![alt blog](https://github.com/chenyanshan/images/blob/master/git/blog.png?raw=true)xn--rhtr11c1t0a.top
+![alt blog](https://github.com/chenyanshan/images/blob/master/git/blog.png?raw=true"xn--rhtr11c1t0a.top")
 
 ## 写这个博客的意义
 
