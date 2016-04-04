@@ -9,8 +9,8 @@
 title: My Portfolio
 email: itcys@qq.com
 description: > # this means to ignore newlines until "baseurl:"
-  chenyanshan, itcys@qq.com
-baseurl: "陈燕山.top" # the subpath of your site, e.g. /blog
+  如有原创文章侵犯版权请联系,itcys@qq.com
+baseurl: "/Users/sum/gitlocal/chenyanshan.github.com" # the subpath of your site, e.g. /blog
 url: "http://陈燕山.top" # the base hostname & protocol for your site
 twitter_username: cys_sum
 github_username: chenyanshan
