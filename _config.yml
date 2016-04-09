@@ -1,13 +1,18 @@
-
 # Site settings
 title: 陈燕山的笔记本
 email: itcys@qq.com
 description: > # this means to ignore newlines until "baseurl:"
-  如有原创文章侵犯版权请联系,itcys@qq.com
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://陈燕山.top" # the base hostname & protocol for your site
-twitter_username: cys_sum
-github_username: chenyanshan
+        联系我请发邮件到itcys@qq.com
+baseurl: "" # the subpath of your site, e.g. /blog/
+url: "http://xn--rhtr11c1t0a.top" # the base hostname & protocol for your site
+twitter_username: sum
+github_username:  chenyanshan
 
 # Build settings
 markdown: kramdown
+
+paginate: 4
+
+author: YanShan Chen
+
+gems: [Jekyll-paginate]

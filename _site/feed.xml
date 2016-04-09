@@ -1,94 +1,254 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>My Portfolio</title>
-    <description>如有原创文章侵犯版权请联系,ItCys@qq.com
+    <title>陈燕山的笔记本</title>
+    <description>联系我请发邮件到itcys@qq.com
 </description>
-    <link>http://陈燕山.top/Users/sum/gitlocal/chenyanshan.github.com/</link>
-    <atom:link href="http://陈燕山.top/Users/sum/gitlocal/chenyanshan.github.com/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Mon, 04 Apr 2016 23:55:19 +0800</pubDate>
-    <lastBuildDate>Mon, 04 Apr 2016 23:55:19 +0800</lastBuildDate>
+    <link>http://xn--rhtr11c1t0a.top/</link>
+    <atom:link href="http://xn--rhtr11c1t0a.top/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Sat, 09 Apr 2016 20:19:31 +0800</pubDate>
+    <lastBuildDate>Sat, 09 Apr 2016 20:19:31 +0800</lastBuildDate>
     <generator>Jekyll v3.1.2</generator>
     
       <item>
-        <title>偷懒技巧之被玩坏的网络选修课~</title>
-        <description>&lt;h2 id=&quot;section&quot;&gt;起因&lt;/h2&gt;
+        <title>pxe的自动化安装的理论及实现</title>
+        <description>&lt;p&gt;Pxe是一种网络安装的技术，主要是实现批量自动安装固定模版的系统，一般家用不会接触这个，但是要搭建服务器群的时候，Pxe的技术优势就会体现出来。批量、自动、自定义配置，云平台流行起来后，Pxe针对大量安装服务器的作用没之前那么大了。好多企业不会再自己组建机房，而是会租用云设备，但是现在终归不是云时代，就算是云时代，基础的Iaas的平台在开始搭建的时候，也会需要Pxe！&lt;/p&gt;
 
-&lt;h4 id=&quot;win10osxlinux5&quot;&gt;开始选课的时候，只考虑学分，没考虑其他的，选了茶与健康，然后登陆上尔雅就愣了，茶？健康？完全没兴趣啊，怎么破？想来想去也只能看下去了，自己作的死，含着泪的也要做完…想着还能挂后台挂完这门课，结果打开个其他页面它居然就停止播放了，硬是要我看？不可能，我就不看，打开虚拟机，然后用虚拟机播放，把虚拟机往其他桌面一扔(现在win10，osx，linux基本都多桌面)，就不管了，可是过了好长一段时间，想着这一章已经完全播放完了，打开虚拟机想播放下一章，打开虚拟机一看，我滴个亲娘啊，它居然卡在5分钟的位置，还提示网络出现故障…想了又想，还是决定一劳永逸，还多学点东西，写个脚本，视频一停就提示～&lt;/h4&gt;
+&lt;h1 id=&quot;pxe&quot;&gt;PXE的简介和实现&lt;/h1&gt;
 
-&lt;h2 id=&quot;section-1&quot;&gt;思路&lt;/h2&gt;
+&lt;h2 id=&quot;pxe-1&quot;&gt;PXE：&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;预启动执行环境(Preboot Exection Environment)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
-&lt;h4 id=&quot;section-2&quot;&gt;脚本的思路很简单，视频一停，任务管理器立即看到虚拟机占用的资源显著下降，就抓住这一点，当虚拟机进程资源占用低于多少多少，就立即反馈给我，&lt;/h4&gt;
+&lt;h2 id=&quot;section&quot;&gt;一句话总结：&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;基于网络的自动化安装
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
-&lt;h2 id=&quot;section-3&quot;&gt;实现&lt;/h2&gt;
+&lt;h2 id=&quot;section-1&quot;&gt;实际作用：&lt;/h2&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;实现服务器群的自动化安装
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 
-&lt;h4 id=&quot;section-4&quot;&gt;开始有一段探索之路就不扯了，直接来直通结果的方法…&lt;/h4&gt;
+&lt;h2 id=&quot;section-2&quot;&gt;实现的基础：&lt;/h2&gt;
 
-&lt;h4 id=&quot;activity-monitor&quot;&gt;打开Activity Monitor&lt;/h4&gt;
+&lt;h2 id=&quot;section-3&quot;&gt;原理：&lt;/h2&gt;
+
+&lt;p&gt;1 Client在设置pxe为第一启动项启动后，就会自动寻找DHCP服务器，然后DHCP服务器会分配给client一个ip，并且将NBP(网络自检程序)的地址(Tftp服务器地址,一般都使用TFTP协议传输NBP)告诉Client。&lt;/p&gt;
+
+&lt;p&gt;在这个过程中，DHCP服务器起到的作用就是分配给client一个ip(与TFTP服务器通信)和重定向的作用，TFTP服务器和DHCP服务器可以是一台server。实际上，pxe的所有service(服务)都可以在一台server上面运行。&lt;/p&gt;
+
+&lt;p&gt;2 当client获得TFTP服务器获得自己的ip和TFTP的ip后，client就会使用获得ip将TFTP服务器中存放的NBP(网络自检程序)下载到电脑的内存,然后执行它,再会从TFTP服务器下载初始引导程序和一些基础文件，里面会有关于安装的配置文件(当然你希望手动安装,也可以不放置配置文件)包含怎么分区,最小化安装还是安装GUI或者是其他。最后还会获得软件包的存放地，一般是指向一个FTP地址或者WEB地址&lt;/p&gt;
+
+&lt;p&gt;3 当安装执行，需要软件包的时候，clenit就会通过FTP或者http协议下载软件包，然后安装
+最后上张脑图，帮助助理解！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://github.com/chenyanshan/images/blob/master/linux/server/PXE.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;section-4&quot;&gt;实现:&lt;/h2&gt;
+
+&lt;h3 id=&quot;client&quot;&gt;Client的配置:&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;要是这个都不会,那我无话可说…&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;server&quot;&gt;server的配置:&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;TFTP：简单文件传输协议&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;因为太过简单，所以Tftp-Server是基于超级守护进程Xinetd而存在的&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#yum -y xinetd tftp-server&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#vi /etc/xinetd.d/tftp         //配置xinetd监听tftp&lt;/span&gt;
+disable                 &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; no   //将yes改成no
+&lt;span class=&quot;c&quot;&gt;#service xinetd restart&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#chkconfig xinetd on&lt;/span&gt;
+
+//将BNP和基础配置文件复制到TFTP服务器目录
+&lt;span class=&quot;c&quot;&gt;#cp /media/images/pxeboot/{vmlinuz,initrd.img} /var/lib/tftpboot/&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#cp /media/isolinux/{boot.msg,vesamenu.c32,splash.jpg} /var/lib/tftpboot/&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#mkdir /var/lib/tftpboot/pxelinux.cfg&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#cp /media/isolinux/isolinux.cfg /var/lib/tftpboot/pxelinux.cfg/default&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#vi /var/lib/ftfpbot/pxelinux.cfg/default&lt;/span&gt;
+
+//pexlinux.0需要安装syslinux
+&lt;span class=&quot;c&quot;&gt;#yum -y install syslinux&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#cp /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot/&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;因为是最小化安装,并没有安装GUI，所以也不能使用System-Config-Kickstart(Gui中一个更改自动化安装配置的软件)来调试自动安装配置,Cfg文件(里面定义了分区，系统选择等配置信息)那就只能使用现成的了&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;DHCP服务：
+之前应该说DHCP的配置的,疏忽了，那DHCP我就直接说配置了&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#yum -y install dhcp&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#cat /usr/share/doc/dhcp*/dhcpd.conf.sample &amp;gt; /etc/dhcp/dhcpd.conf&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#cp /etc/dhcp/dhcp.conf /etc/dhcp/dhcp.conf.bak`date +%Y%m%d`&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#vi /etc/dhcp/dhcpd.conf&lt;/span&gt;
+option domain-name &lt;span class=&quot;s2&quot;&gt;&quot;example.org&quot;&lt;/span&gt;;
+option domain-name-servers ns1.example.org;
+
+default-lease-time 600;  //默认租约600s
+max-lease-time 7200;   //默认最大租约7200s
+log-facility local7;    //设定的日志存放地
+subnet 172.16.92.0 netmask 255.255.255.0 &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt; //网段
+range dynamic-bootp 172.16.92.30 172.16.92.200; //地址池
+next-server  172.16.92.12；         //tftp服务器地址
+filename “pxelinux.0”  //如果不是在TFTP根目录,就需要加上路径
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#server dhcpd start&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#chkconfig dhcpd on&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;基本上到这个地方,Dhcp服务器就差不多了～当然这个只是为了PXE而搭建的最简单的HDCP服务器，里面并没有其他的配置&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Ftp/Web:提供软件包&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;c&quot;&gt;#yum -y install vsftpd&lt;/span&gt;
+或者
+&lt;span class=&quot;c&quot;&gt;#yum -y install httpd&lt;/span&gt;
+
+
+//ftp设置无账号密码登陆者根目录&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;web不需要&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#echo anon_root=/opt &amp;gt; /etc/vsftpd/vsftpd.conf&lt;/span&gt;
+
+//Ftp关闭防火墙和selinux沙箱
+&lt;span class=&quot;c&quot;&gt;#server iptablse stop      &lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#setenforce 0&lt;/span&gt;
+
+//因为不是Gui界面，所以只能拿已经存在的cfg文件&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;系统配置文件&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;改
+&lt;span class=&quot;c&quot;&gt;#cp /root/anaconda-ks.cfg /opt/ks.cfg   //ftp&lt;/span&gt;
+或者
+&lt;span class=&quot;c&quot;&gt;#cp /root/anaconda-ks.cfg /var/www/html/ks.cfg   //web&lt;/span&gt;
+//我给的cfg文件在文章最底下，可以拷贝过去再稍微改下就能用了
+
+
+&lt;span class=&quot;c&quot;&gt;#vi /var/lib/tftpboot/pxelinux.cfg/default&lt;/span&gt;
+...
+//设置cfg文件的地点，一般是Web或者Ftp
+//只要加上最后一句的ks&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ftp://xxx
+label linux
+  menu label ^Install or upgrade an existing system
+  menu default
+  kernel vmlinuz
+  append &lt;span class=&quot;nv&quot;&gt;initrd&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;initrd.img &lt;span class=&quot;nv&quot;&gt;ks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ftp://172.16.92.13/ks.cfg
+//Web只要将最后一句改成ks&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://172.16.92.13/ks.cfg
+...
+
+准备安装源，Web端的只需要将/opt改成/var/www/html就行
+&lt;span class=&quot;c&quot;&gt;#mkdir /opt/centos&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#mount -o loop /opt/centos&lt;/span&gt;
+//下面这句话的意思是开机自动挂载,看需求
+&lt;span class=&quot;c&quot;&gt;#cat /etc/mtab | grep /opt/centos &amp;gt;&amp;gt; /etc/fstab&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;#vi /opt/ks.cfg&lt;/span&gt;
+在前面几句中加上
+url --url&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://172.16.92.13/centos
+或者
+url --url&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;ftp://172.16.92.13/centos
+
+&lt;span class=&quot;c&quot;&gt;#server vstfpd start&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#chkconfig vsftp on&lt;/span&gt;
+或者
+＃server httpd start
+&lt;span class=&quot;c&quot;&gt;#chkconfig httpd on&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/chenyanshan/blog/blob/master/ks.cfg&quot;&gt;cfg文件&lt;/a&gt;&lt;/p&gt;
+</description>
+        <pubDate>Thu, 07 Apr 2016 00:52:07 +0800</pubDate>
+        <link>http://xn--rhtr11c1t0a.top/linux/2016/04/07/pxe.html</link>
+        <guid isPermaLink="true">http://xn--rhtr11c1t0a.top/linux/2016/04/07/pxe.html</guid>
+        
+        <category>Linux</category>
+        
+        
+        <category>Linux</category>
+        
+      </item>
+    
+      <item>
+        <title>被玩坏的网络课</title>
+        <description>&lt;p&gt;起因: 开始选课的时候，只考虑学分，没考虑其他的，选了茶与健康，然后登陆上尔雅就愣了，茶？健康？完全没兴趣啊，怎么破？想来想去也只能看下去了，自己作的死，含着泪的也要做完…想着还能挂后台挂完这门课，结果打开个其他页面它居然就停止播放了，硬是要我看？不可能，我就不看，打开虚拟机，然后用虚拟机播放，把虚拟机往其他桌面一扔(现在win10，osx，linux基本都多桌面)，就不管了，可是过了好长一段时间，想着这一章已经完全播放完了，打开虚拟机想播放下一章，打开虚拟机一看，我滴个亲娘啊，它居然卡在5分钟的位置，还提示网络出现故障…想了又想，还是决定一劳永逸，还多学点东西，写个脚本，视频一停就提示～&lt;/p&gt;
+
+&lt;p&gt;思路&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;脚本的思路很简单，视频一停，任务管理器立即看到虚拟机占用的资源显著下降，就抓住这一点，当虚拟机进程资源占用低于多少多少，就立即反馈给我，&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;实现&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;开始有一段探索之路就不扯了，直接来直通结果的方法…&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;1,打开Activity Monitor&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://github.com/chenyanshan/images/blob/master/linux/sh/%E6%88%AA%E5%9B%BE%202016-03-31%2012%E6%97%B605%E5%88%8636%E7%A7%92.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;windows-10-propid2837&quot;&gt;找到Windows 10 Pro虚拟机的PID:2837&lt;/h4&gt;
-&lt;p&gt;#### 在Terminal输入&lt;code class=&quot;highlighter-rouge&quot;&gt;$ps aux | grep 2837&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;2,找到Windows 10 Pro虚拟机的PID:2837&lt;/p&gt;
+
+&lt;p&gt;3,在Terminal输入&lt;code class=&quot;highlighter-rouge&quot;&gt;$ps aux | grep 2837&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://github.com/chenyanshan/images/blob/master/linux/sh/%E6%88%AA%E5%9B%BE%202016-03-30%2019%E6%97%B635%E5%88%8629%E7%A7%92.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;section-5&quot;&gt;找到其中&lt;/h4&gt;
-&lt;p&gt;&#39;’uuid{6248b065-598e-47de-9852-7dbf667fbba4}&lt;/p&gt;
+&lt;p&gt;4,找到其中uuid{6248b065-598e-47de-9852-7dbf667fbba4}&lt;/p&gt;
 
-&lt;h4 id=&quot;section-6&quot;&gt;再然后每次&lt;/h4&gt;
-&lt;p&gt;&#39;’ps aux | grep 6248b065-598e-47de-9852-7dbf667fbba4
-#### 都能找到Windows 10 Pro的进程号了，&lt;/p&gt;
+&lt;p&gt;5,再然后每次&lt;code class=&quot;highlighter-rouge&quot;&gt;ps aux | grep 6248b065-598e-47de-9852-7dbf667fbba4&lt;/code&gt; 都能找到Windows 10 Pro的进程号了&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://github.com/chenyanshan/images/blob/master/linux/sh/%E6%88%AA%E5%9B%BE%202016-03-30%2019%E6%97%B638%E5%88%8643%E7%A7%92.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;greptopuuid&quot;&gt;肯定有童鞋会想，直接grep找到进程名字不就的了吗？为啥还要这么麻烦，其实我也不想麻烦，只是虚拟机开的多，连top里面的进程名字都是一样的，只能找uuid这种特殊的东西了咯～&lt;/h4&gt;
+&lt;p&gt;肯定有童鞋会想，直接grep找到进程名字不就的了吗？为啥还要这么麻烦，其实我也不想麻烦，只是虚拟机开的多，连top里面的进程名字都是一样的，只能找uuid这种特殊的东西了咯～&lt;/p&gt;
 
-&lt;h4 id=&quot;awkpid&quot;&gt;awk提取出PID:&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ ps aux | grep {6248b065-598e-47de-9852-7dbf667fbba4} | grep VM | awk -F&quot; &quot; &#39;{print $2}&#39;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;6,awk提取出&lt;code class=&quot;highlighter-rouge&quot;&gt;PID:$ ps aux | grep {6248b065-598e-47de-9852-7dbf667fbba4} | grep VM | awk -F&quot; &quot; &#39;{print $2}&#39;&lt;/code&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://github.com/chenyanshan/images/blob/master/linux/sh/%E6%88%AA%E5%9B%BE%202016-03-30%2020%E6%97%B612%E5%88%8649%E7%A7%92.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;debug&quot;&gt;还特地debug了一下&lt;/h4&gt;
+&lt;p&gt;还特地debug了一下&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://github.com/chenyanshan/images/blob/master/linux/sh/%E6%88%AA%E5%9B%BE%202016-03-30%2020%E6%97%B617%E5%88%8623%E7%A7%92.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;pidtopcpuif&quot;&gt;然后再用PID在top提取出对应的CPU使用率，if命令&lt;/h4&gt;
+&lt;p&gt;然后再用PID在top提取出对应的CPU使用率，if命令&lt;/p&gt;
 
-&lt;h4 id=&quot;top--l-1toptop--l-11top--l-2windows-10cpucpu10615&quot;&gt;用top -l 1只使用一次top，再在其中提取，结果top -l 1的结果一直是1，使用top -l 2，第二次输出的结果就正常了，这是视频启动前和启动后结果，因为是windows 10虚拟机在当前系统运行的程序中占的CPU时间，可能程序开多了虚拟机开视频占用的CPU时间也会大幅度降低，监控点就定在10%好了(其实昨天晚上的时候看过了，在6～15％之间)&lt;/h4&gt;
+&lt;p&gt;7,用top -l 1只使用一次top，再在其中提取，结果top -l 1的结果一直是1，使用top -l 2，第二次输出的结果就正常了，这是视频启动前和启动后结果，因为是windows 10虚拟机在当前系统运行的程序中占的CPU时间，可能程序开多了虚拟机开视频占用的CPU时间也会大幅度降低，监控点就定在10%好了(其实昨天晚上的时候看过了，在6～15％之间)&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://github.com/chenyanshan/images/blob/master/linux/sh/%E6%88%AA%E5%9B%BE%202016-03-31%2008%E6%97%B651%E5%88%8608%E7%A7%92.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;section-7&quot;&gt;初步测试后的结果&lt;/h4&gt;
+&lt;p&gt;初步测试后的结果&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://github.com/chenyanshan/images/blob/master/linux/sh/%E6%88%AA%E5%9B%BE%202016-03-31%2009%E6%97%B625%E5%88%8650%E7%A7%92.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://github.com/chenyanshan/images/blob/master/linux/sh/%E6%88%AA%E5%9B%BE%202016-03-31%2011%E6%97%B610%E5%88%8651%E7%A7%92.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;section-8&quot;&gt;调试细节后&lt;/h4&gt;
+&lt;p&gt;调试细节后&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://github.com/chenyanshan/images/blob/master/linux/sh/%E6%88%AA%E5%9B%BE%202016-03-31%2011%E6%97%B609%E5%88%8606%E7%A7%92.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;section-9&quot;&gt;加入计划任务&lt;/h4&gt;
+&lt;p&gt;加入计划任务&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;https://github.com/chenyanshan/images/blob/master/linux/sh/%E6%88%AA%E5%9B%BE%202016-03-31%2011%E6%97%B659%E5%88%8610%E7%A7%92.jpg?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
-&lt;h4 id=&quot;vmwin10shhttpsgithubcomchenyanshanshblobmastervmwin10sh&quot;&gt;脚本我放在&lt;a href=&quot;https://github.com/chenyanshan/sh/blob/master/vm_win10.sh&quot;&gt;vm_win10.sh&lt;/a&gt;&lt;/h4&gt;
-&lt;p&gt;mac或者linux拿过去修改一下应该就能使用了～&lt;/p&gt;
+&lt;p&gt;脚本我放在&lt;a href=&quot;https://github.com/chenyanshan/sh/blob/master/vm_win10.sh&quot;&gt;vm_win10.sh&lt;/a&gt;
+mac或者linux拿过去修改一下应该就能使用了～&lt;/p&gt;
 </description>
-        <pubDate>Mon, 04 Apr 2016 17:31:49 +0800</pubDate>
-        <link>http://陈燕山.top/Users/sum/gitlocal/chenyanshan.github.com/jekyll/update/2016/04/04/%E8%A2%AB%E7%8E%A9%E5%9D%8F%E7%9A%84%E9%80%89%E4%BF%AE%E8%AF%BE.html</link>
-        <guid isPermaLink="true">http://陈燕山.top/Users/sum/gitlocal/chenyanshan.github.com/jekyll/update/2016/04/04/%E8%A2%AB%E7%8E%A9%E5%9D%8F%E7%9A%84%E9%80%89%E4%BF%AE%E8%AF%BE.html</guid>
+        <pubDate>Thu, 07 Apr 2016 00:52:07 +0800</pubDate>
+        <link>http://xn--rhtr11c1t0a.top/shell/2016/04/07/%E8%A2%AB%E7%8E%A9%E5%9D%8F%E7%9A%84%E9%80%89%E4%BF%AE%E8%AF%BE.html</link>
+        <guid isPermaLink="true">http://xn--rhtr11c1t0a.top/shell/2016/04/07/%E8%A2%AB%E7%8E%A9%E5%9D%8F%E7%9A%84%E9%80%89%E4%BF%AE%E8%AF%BE.html</guid>
+        
+        <category>shell</category>
         
         
-        <category>jekyll</category>
-        
-        <category>update</category>
+        <category>shell</category>
         
       </item>
     
       <item>
-        <title>欢迎访问陈燕山的blog!</title>
+        <title>欢迎访问陈燕山的bolg～</title>
         <description>
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-c&quot; data-lang=&quot;c&quot;&gt;&lt;span class=&quot;cp&quot;&gt;#include&amp;lt;stdio.h&amp;gt;
 &lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(){&lt;/span&gt;
@@ -97,9 +257,13 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
-        <pubDate>Wed, 30 Mar 2016 17:31:49 +0800</pubDate>
-        <link>http://陈燕山.top/Users/sum/gitlocal/chenyanshan.github.com/jekyll/update/2016/03/30/%E6%AC%A2%E8%BF%8E.html</link>
-        <guid isPermaLink="true">http://陈燕山.top/Users/sum/gitlocal/chenyanshan.github.com/jekyll/update/2016/03/30/%E6%AC%A2%E8%BF%8E.html</guid>
+        <pubDate>Thu, 07 Apr 2016 00:52:07 +0800</pubDate>
+        <link>http://xn--rhtr11c1t0a.top/jekyll/update/2016/04/07/%E6%AC%A2%E8%BF%8E.html</link>
+        <guid isPermaLink="true">http://xn--rhtr11c1t0a.top/jekyll/update/2016/04/07/%E6%AC%A2%E8%BF%8E.html</guid>
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
         
         
         <category>jekyll</category>

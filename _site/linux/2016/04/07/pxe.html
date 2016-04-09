@@ -1,0 +1,315 @@
+<!DOCTYPE HTML>
+<!--
+	Future Imperfect by HTML5 UP
+	html5up.net | @n33co
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+  <head>
+  <title>陈燕山的笔记本</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!--[if lte IE 8]><script src="js/ie/html5shiv.js"></script><![endif]-->
+  <link rel="stylesheet" href="/css/main.css">
+  <!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
+  <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+</head>
+
+	<body>
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+<header id="header">
+  <h1><a href="http://xn--rhtr11c1t0a.top">陈燕山的笔记本</a></h1>
+	<nav class="links">
+    <!--
+    <ul>
+      <li><a href="#">Lorem</a></li>
+			<li><a href="#">Ipsum</a></li>
+			<li><a href="#">Feugiat</a></li>
+			<li><a href="#">Tempus</a></li>
+			<li><a href="#">Adipiscing</a></li>
+		</ul>
+  -->
+	</nav>
+	<nav class="main">
+    <ul>
+                <!--
+								<li class="search">
+									<a class="fa-search" href="#search">Search</a>
+									<form id="search" method="get" action="#">
+										<input type="text" name="query" placeholder="Search" />
+									</form>
+								</li>
+              -->
+		  <li class="menu">
+		  	<a class="fa-bars" href="#menu">Menu</a>
+			</li>
+		</ul>
+	</nav>
+</header>
+
+<!-- Menu -->
+<section id="menu">
+  <!-- Search -->
+  <!--
+  <section>
+	  <form class="search" method="get" action="#">
+	    <input type="text" name="query" placeholder="Search" />
+		</form>
+	</section>
+  -->
+	<!-- Links -->
+	<section>
+	  <ul class="links">
+	    <li>
+		    <a href="/acknowledgement">
+				  <h3>Acknowledgement</h3>
+				  <p>Acknowledgement</p>
+				</a>
+			</li>
+    </ul>
+	</section>
+	<!-- Actions -->
+  <!--
+  <section>
+	  <ul class="actions vertical">
+	    <li><a href="#" class="button big fit">Log In</a></li>
+    </ul>
+  </section>
+  -->
+</section>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+            <article class="post">
+              <header>
+                <div class="title">
+                  <h2><a href="/linux/2016/04/07/pxe.html">pxe的自动化安装的理论及实现</a></h2>
+                <!-- <p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p> -->
+                </div>
+                <div class="meta">
+                  <time class="published" datetime="2016-04-07">April 07, 2016</time>
+                  
+                    <a href="#">Linux</a>
+                  
+        <!--
+        <a href="#" class="author"><span class="name">Jane Doe</span><img src="images/avatar.jpg" alt="" /></a>
+        -->
+                </div>
+              </header>
+              
+              <p>Pxe是一种网络安装的技术，主要是实现批量自动安装固定模版的系统，一般家用不会接触这个，但是要搭建服务器群的时候，Pxe的技术优势就会体现出来。批量、自动、自定义配置，云平台流行起来后，Pxe针对大量安装服务器的作用没之前那么大了。好多企业不会再自己组建机房，而是会租用云设备，但是现在终归不是云时代，就算是云时代，基础的Iaas的平台在开始搭建的时候，也会需要Pxe！</p>
+
+<h1 id="pxe">PXE的简介和实现</h1>
+
+<h2 id="pxe-1">PXE：</h2>
+<div class="highlighter-rouge"><pre class="highlight"><code>预启动执行环境(Preboot Exection Environment)
+</code></pre>
+</div>
+
+<h2 id="section">一句话总结：</h2>
+<div class="highlighter-rouge"><pre class="highlight"><code>基于网络的自动化安装
+</code></pre>
+</div>
+
+<h2 id="section-1">实际作用：</h2>
+<div class="highlighter-rouge"><pre class="highlight"><code>实现服务器群的自动化安装
+</code></pre>
+</div>
+
+<h2 id="section-2">实现的基础：</h2>
+
+<h2 id="section-3">原理：</h2>
+
+<p>1 Client在设置pxe为第一启动项启动后，就会自动寻找DHCP服务器，然后DHCP服务器会分配给client一个ip，并且将NBP(网络自检程序)的地址(Tftp服务器地址,一般都使用TFTP协议传输NBP)告诉Client。</p>
+
+<p>在这个过程中，DHCP服务器起到的作用就是分配给client一个ip(与TFTP服务器通信)和重定向的作用，TFTP服务器和DHCP服务器可以是一台server。实际上，pxe的所有service(服务)都可以在一台server上面运行。</p>
+
+<p>2 当client获得TFTP服务器获得自己的ip和TFTP的ip后，client就会使用获得ip将TFTP服务器中存放的NBP(网络自检程序)下载到电脑的内存,然后执行它,再会从TFTP服务器下载初始引导程序和一些基础文件，里面会有关于安装的配置文件(当然你希望手动安装,也可以不放置配置文件)包含怎么分区,最小化安装还是安装GUI或者是其他。最后还会获得软件包的存放地，一般是指向一个FTP地址或者WEB地址</p>
+
+<p>3 当安装执行，需要软件包的时候，clenit就会通过FTP或者http协议下载软件包，然后安装
+最后上张脑图，帮助助理解！</p>
+
+<p><img src="https://github.com/chenyanshan/images/blob/master/linux/server/PXE.jpg?raw=true" alt="" /></p>
+
+<h2 id="section-4">实现:</h2>
+
+<h3 id="client">Client的配置:</h3>
+<ul>
+  <li>要是这个都不会,那我无话可说…</li>
+</ul>
+
+<h3 id="server">server的配置:</h3>
+
+<ul>
+  <li>TFTP：简单文件传输协议</li>
+</ul>
+
+<p>因为太过简单，所以Tftp-Server是基于超级守护进程Xinetd而存在的</p>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#yum -y xinetd tftp-server</span>
+<span class="c">#vi /etc/xinetd.d/tftp         //配置xinetd监听tftp</span>
+disable                 <span class="o">=</span> no   //将yes改成no
+<span class="c">#service xinetd restart</span>
+<span class="c">#chkconfig xinetd on</span>
+
+//将BNP和基础配置文件复制到TFTP服务器目录
+<span class="c">#cp /media/images/pxeboot/{vmlinuz,initrd.img} /var/lib/tftpboot/</span>
+<span class="c">#cp /media/isolinux/{boot.msg,vesamenu.c32,splash.jpg} /var/lib/tftpboot/</span>
+<span class="c">#mkdir /var/lib/tftpboot/pxelinux.cfg</span>
+<span class="c">#cp /media/isolinux/isolinux.cfg /var/lib/tftpboot/pxelinux.cfg/default</span>
+<span class="c">#vi /var/lib/ftfpbot/pxelinux.cfg/default</span>
+
+//pexlinux.0需要安装syslinux
+<span class="c">#yum -y install syslinux</span>
+<span class="c">#cp /usr/share/syslinux/pxelinux.0 /var/lib/tftpboot/</span></code></pre></figure>
+
+<p>因为是最小化安装,并没有安装GUI，所以也不能使用System-Config-Kickstart(Gui中一个更改自动化安装配置的软件)来调试自动安装配置,Cfg文件(里面定义了分区，系统选择等配置信息)那就只能使用现成的了</p>
+
+<ul>
+  <li>DHCP服务：
+之前应该说DHCP的配置的,疏忽了，那DHCP我就直接说配置了</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#yum -y install dhcp</span>
+<span class="c">#cat /usr/share/doc/dhcp*/dhcpd.conf.sample &gt; /etc/dhcp/dhcpd.conf</span>
+<span class="c">#cp /etc/dhcp/dhcp.conf /etc/dhcp/dhcp.conf.bak`date +%Y%m%d`</span>
+<span class="c">#vi /etc/dhcp/dhcpd.conf</span>
+option domain-name <span class="s2">"example.org"</span>;
+option domain-name-servers ns1.example.org;
+
+default-lease-time 600;  //默认租约600s
+max-lease-time 7200;   //默认最大租约7200s
+log-facility local7;    //设定的日志存放地
+subnet 172.16.92.0 netmask 255.255.255.0 <span class="o">{</span> //网段
+range dynamic-bootp 172.16.92.30 172.16.92.200; //地址池
+next-server  172.16.92.12；         //tftp服务器地址
+filename “pxelinux.0”  //如果不是在TFTP根目录,就需要加上路径
+<span class="o">}</span>
+<span class="c">#server dhcpd start</span>
+<span class="c">#chkconfig dhcpd on</span></code></pre></figure>
+
+<p>基本上到这个地方,Dhcp服务器就差不多了～当然这个只是为了PXE而搭建的最简单的HDCP服务器，里面并没有其他的配置</p>
+
+<ul>
+  <li>Ftp/Web:提供软件包</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="c">#yum -y install vsftpd</span>
+或者
+<span class="c">#yum -y install httpd</span>
+
+
+//ftp设置无账号密码登陆者根目录<span class="o">(</span>web不需要<span class="o">)</span>
+<span class="c">#echo anon_root=/opt &gt; /etc/vsftpd/vsftpd.conf</span>
+
+//Ftp关闭防火墙和selinux沙箱
+<span class="c">#server iptablse stop      </span>
+<span class="c">#setenforce 0</span>
+
+//因为不是Gui界面，所以只能拿已经存在的cfg文件<span class="o">(</span>系统配置文件<span class="o">)</span>改
+<span class="c">#cp /root/anaconda-ks.cfg /opt/ks.cfg   //ftp</span>
+或者
+<span class="c">#cp /root/anaconda-ks.cfg /var/www/html/ks.cfg   //web</span>
+//我给的cfg文件在文章最底下，可以拷贝过去再稍微改下就能用了
+
+
+<span class="c">#vi /var/lib/tftpboot/pxelinux.cfg/default</span>
+...
+//设置cfg文件的地点，一般是Web或者Ftp
+//只要加上最后一句的ks<span class="o">=</span>ftp://xxx
+label linux
+  menu label ^Install or upgrade an existing system
+  menu default
+  kernel vmlinuz
+  append <span class="nv">initrd</span><span class="o">=</span>initrd.img <span class="nv">ks</span><span class="o">=</span>ftp://172.16.92.13/ks.cfg
+//Web只要将最后一句改成ks<span class="o">=</span>http://172.16.92.13/ks.cfg
+...
+
+准备安装源，Web端的只需要将/opt改成/var/www/html就行
+<span class="c">#mkdir /opt/centos</span>
+<span class="c">#mount -o loop /opt/centos</span>
+//下面这句话的意思是开机自动挂载,看需求
+<span class="c">#cat /etc/mtab | grep /opt/centos &gt;&gt; /etc/fstab</span>
+
+<span class="c">#vi /opt/ks.cfg</span>
+在前面几句中加上
+url --url<span class="o">=</span>http://172.16.92.13/centos
+或者
+url --url<span class="o">=</span>ftp://172.16.92.13/centos
+
+<span class="c">#server vstfpd start</span>
+<span class="c">#chkconfig vsftp on</span>
+或者
+＃server httpd start
+<span class="c">#chkconfig httpd on</span></code></pre></figure>
+
+<p><a href="https://github.com/chenyanshan/blog/blob/master/ks.cfg">cfg文件</a></p>
+
+              <footer>
+                <ul class="stats">
+                
+                  <li><a href="#">Linux</a></li>
+                
+        <!--
+        <li><a href="#">General</a></li>
+        <li><a href="#" class="icon fa-heart">28</a></li>
+        <li><a href="#" class="icon fa-comment">128</a></li>
+        -->
+                </ul>
+              </footer>
+           </article>
+					</div>
+
+				<!-- Sidebar -->
+					<section id="sidebar">
+
+						<!-- Intro -->
+						<section id="intro">
+  <a href="http://xn--rhtr11c1t0a.top" class="logo"><img src="/images/logo.jpg" alt="" /></a>
+	<header>
+    <h2>陈燕山的笔记本</h2>
+		<p>为什么叫陈燕山的笔记本呢？因为这个blog更多的是为了整理笔记和疏离知识
+    </p>
+	</header>
+</section>
+
+
+						<!-- About -->
+					  <section class="blurb">
+  <h2>About</h2>
+	<p>联系我请发邮件到itcys@qq.com
+</p>
+	<ul class="actions">
+	  <li><a href="/about" class="button">Learn More</a></li>
+	</ul>
+</section>
+
+
+						<!-- Footer -->
+						<section id="footer">
+  <ul class="icons">
+  	<li><a href="https://twitter.com/sum" class="fa-twitter"><span class="label">Twitter</span></a></li>
+		<li><a href="https://github.com/chenyanshan" class="fa-github"><span class="label">GitHub</span></a></li>
+		<li><a href="/feed.xml" class="fa-rss"><span class="label">RSS</span></a></li>
+		<li><a href="mailto:itcys@qq.com" class="fa-envelope"><span class="label">Email</span></a></li>
+	</ul>
+  <p class="copyright">Copyright &copy; 2016 YanShan Chen</p>
+</section>
+
+					</section>
+			</div>
+		<!-- Scripts -->
+		<script src="/js/jquery.min.js"></script>
+<script src="/js/skel.min.js"></script>
+<script src="/js/util.js"></script>
+<!--[if lte IE 8]><script src="/assets/js/ie/respond.min.js"></script><![endif]-->
+<script src="/js/main.js"></script>
+
+	</body>
+</html>
