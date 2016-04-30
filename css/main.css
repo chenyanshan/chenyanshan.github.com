@@ -14,7 +14,7 @@ Source Sans Pro@import url(font-awesome.min.css);
 		padding: 0;
 		border: 0;
 		font-size: 100%;
-		font: Menlo;
+		font: consolas;
 		vertical-align: baseline;
 	}
 
@@ -1426,7 +1426,7 @@ Source Sans Pro@import url(font-awesome.min.css);
 
 	body, input, select, textarea {
 		color: #646464;
-		font-family: "Menlo", Helvetica, Microsoft YaHei, 'Yu Gothic', YuGothic, 'ヒラギノ角ゴシック Pro', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, Osaka, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
+		font-family: "consolas", Helvetica, Microsoft YaHei, 'Yu Gothic', YuGothic, 'ヒラギノ角ゴシック Pro', 'Hiragino Kaku Gothic Pro', メイリオ, Meiryo, Osaka, 'ＭＳ Ｐゴシック', 'MS PGothic', sans-serif;
 		font-size: 14pt;
 		font-weight: 400;
 		line-height: 1.75;
