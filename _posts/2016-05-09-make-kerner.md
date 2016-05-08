@@ -244,6 +244,7 @@ SCSI
 	
 	  read -p "Plz enter a command: " command
 	done
+
 copy bash 命令
 	
 	# bash ~/commandcopy.sh 
