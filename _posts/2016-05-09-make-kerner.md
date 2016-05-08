@@ -2,8 +2,8 @@
 layout: page
 title:  "记一次失败的编译kernel"
 date:   2016-5-8 23:52:07
-categories: Linux
-tags: Linux
+categories: kernel
+tags: kernel
 ---
 
 
