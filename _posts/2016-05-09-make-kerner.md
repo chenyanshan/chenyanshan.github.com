@@ -1,7 +1,7 @@
 ---
 layout: page
 title:  "记一次失败的编译kernel"
-date:   2016-5-9 23:52:07
+date:   2016-4-8 23:52:07
 categories: kernel
 tags: kernel
 ---
