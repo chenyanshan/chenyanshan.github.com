@@ -1,6 +1,6 @@
 ---
 layout: page
-title:  "简单实现iptables自动防止DDOS"
+title:  "简单实现自动防御DDOS"
 date:   2016-4-19 01:52:07
 categories: linux
 tags: linux
@@ -10,7 +10,7 @@ tags: linux
 
 直接进入主题：
 
-## 思路
+## 思路(关键是这个)
 
  一，分析日志(日志太少，分析方式和正常不一样)：
 
@@ -91,12 +91,12 @@ tags: linux
 
 当然这样肯定是不好的，不过对于小型网站勉强也够用，对于中型网站，我在上面已经给出思路，还是比较简单的。。
 
-脚本：
+脚本：https://github.com/chenyanshan/sh/blob/master/ddos_firewall.sh
 
 [image-1]:	https://github.com/chenyanshan/images/blob/master/linux/sh/ddos_iptables/2%E7%8E%B0%E8%B1%A1_1.png?raw=true
 [image-2]:	https://github.com/chenyanshan/images/blob/master/linux/sh/ddos_iptables/3code.png?raw=true
 [image-3]:	https://github.com/chenyanshan/images/blob/master/linux/sh/ddos_iptables/3.png?raw=true
 [image-4]:	https://github.com/chenyanshan/images/blob/master/linux/sh/ddos_iptables/4code2.png?raw=true
 [image-5]:	https://github.com/chenyanshan/images/blob/master/linux/sh/ddos_iptables/5shell_2.png?raw=true
-[image-6]:	https://github.com/chenyanshan/images/blob/master/linux/sh/ddos_iptables/2%E7%8E%B0%E8%B1%A1_1.png?raw=true
-[image-7]:	https://github.com/chenyanshan/images/blob/master/linux/sh/ddos_iptables/6iptables.png?raw=true
+[image-6]:	https://github.com/chenyanshan/images/blob/master/linux/sh/ddos_iptables/7.jpg?raw=true
+[image-7]:	https://github.com/chenyanshan/images/blob/master/linux/sh/ddos_iptables/8.jpg?raw=true	
