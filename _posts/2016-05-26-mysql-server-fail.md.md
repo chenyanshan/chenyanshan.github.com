@@ -1,7 +1,7 @@
 ---
 layout: page
 title: "一开发环境的恢复"
-date:   2016-4-19 01:52:07
+date:   2016-4-26 01:52:07
 categories: linux
 tags: linux
 ---
@@ -19,11 +19,11 @@ tags: linux
 
 用PD打开还需要类似转码的步骤。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image2.png?raw=true)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image3.png?raw=true)
 
 启动之后傻眼了
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image2.png?raw=true)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image4.png?raw=true)
 
 什么鬼，看不懂。。不过没关心。。来思路！
 
@@ -95,8 +95,13 @@ LVM,那就检测一下咯，
 然后在里面找到数据库，PHP代码啥的。当然这些个都是别人的，不好展示
  
 摸索过程在下列blog中获得了帮助：
+
 [http://www.cnblogs.com/xiaoyu1005/archive/2013/05/20/3088586.html](#)
+
 [http://www.2cto.com/os/201308/238435.html](http://www.2cto.com/os/201308/238435.html)
+
 [http://qhy.cn/node/430](http://qhy.cn/node/430)
+
 [http://www.xitongzhijia.net/xtjc/20141212/32518.html](http://www.xitongzhijia.net/xtjc/20141212/32518.html)
+
 其实就看了一篇的，不过既然都差不多，就都放这里。查找这个错误才到这里的，可以直接就过去这些链接。里面有的讲的比较详细
