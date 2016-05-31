@@ -1,7 +1,7 @@
 ---
 layout: page
 title:  "模式化编译安装"
-date:   2016-4-1 8:52:07
+date:   2016-6-1 8:52:07
 categories: Make
 tags: Make
 ---
@@ -19,37 +19,37 @@ tags: Make
 其实这基本就是rpm安装的时候。rpm安装包比我们多做的事情了。
 不扯太多，直接进入主题：
 
-## －，编译安装Apache
+# －，编译安装Apache
 
-### 1.1 编译安装apr apr-util
+ 1.1 编译安装apr apr-util
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/2%E5%AE%89%E8%A3%85%E5%9F%BA%E7%A1%80%E5%8C%85.jpg?raw=true)
 
-### 1.2 编译安装Apache，选项可以根据自己需要的来
+ 1.2 编译安装Apache，选项可以根据自己需要的来
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/3-2New%E7%BC%96%E8%AF%91%E4%BB%A3%E7%A0%81.jpg?raw=true)
 
-### 1.3 最常见错误解决办法
+ 1.3 最常见错误解决办法
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/5-%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%8A%A5%E9%94%99.jpg?raw=true)
 
 像这次报错OpenSSL版本过低的问题，我一开始接触编译安装的时候，也是各种想不通，所以我在这里告诉初学者：一般编译安装报的软件问题，yum安装其devel(开发)包就行了，所以这里我就毫不犹豫直接选择安装了openssl-devel。当然这里就是openssl-devel的包的问题。
 
-## 二，库文件和头文件导出
+# 二，库文件和头文件导出
 
-### 2.1 导出头文件
+ 2.1 导出头文件
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/6-%E5%AF%BC%E5%87%BA%E5%BA%93%E6%96%87%E4%BB%B6.jpg?raw=true)
 
-### 2.2 导出库文件
+ 2.2 导出库文件
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/7-%E5%AF%BC%E5%87%BA%E5%A4%B4%E6%96%87%E4%BB%B6.jpg?raw=true)
 
 头文件和库文件也像PATH环境变量一样，它只在规定的地方寻找自己的内容。
 
-## 三，后续配置
+# 三，后续配置
 
-### 3.1 让服务能支持man文档
+ 3.1 让服务能支持man文档
 
 - 在配置文件中添加配置项
 
@@ -59,11 +59,11 @@ tags: Make
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/9-Man%E6%B5%8B%E8%AF%95.jpg?raw=true)
 
-### 3.2 添加环境变量
+ 3.2 添加环境变量
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/11-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F.jpg?raw=true)
 
-### 3.3 添加启动脚本,在/etc/rc.d/init.d/下面建立httpd文件
+ 3.3 添加启动脚本,在/etc/rc.d/init.d/下面建立httpd文件
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/12-%E8%84%9A%E6%9C%AC.png?raw=true)
 
@@ -73,11 +73,11 @@ tags: Make
 
 这个脚本是我半写半抄的，基本上随便拷贝一个过来，修改修改就可以用。脚本我会放在最下面
 
-### 3.4 加入chkconfig自动开机项
+ 3.4 加入chkconfig自动开机项
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/13-2%20chkconfig.jpg?raw=true)
 
-### 3.5 /etc/sysconfig/下面建立配置文件
+ 3.5 /etc/sysconfig/下面建立配置文件
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/13-:etc:sysconfig:httpd%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6.jpg?raw=true)
 
@@ -87,7 +87,7 @@ tags: Make
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/14-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6selinux.jpg?raw=true)
 
-### 3.6 service启动测试
+ 3.6 service启动测试
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/Httpd/15-%E5%90%AF%E5%8A%A8%E6%B5%8B%E8%AF%95%E6%B5%8B%E8%AF%95.jpg?raw=true)
 
