@@ -1,7 +1,7 @@
 ---
 layout: page
 title:  "模式化编译安装"
-date:   2016-6-1 8:52:07
+date:   2016-4-31 8:52:07
 categories: Make
 tags: Make
 ---
