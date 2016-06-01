@@ -11,20 +11,20 @@ tags: DBMS
 
 - scale up  向上扩展，垂直扩展
 
-> scale up是针对服务器进行硬件上的提升，这是一个非常不理想的扩展方式
+scale up是针对服务器进行硬件上的提升，这是一个非常不理想的扩展方式
 
-- 硬件水平提升代价太大
-- 性能只能提升到某个程度
+> - 硬件水平提升代价太大
+> - 性能只能提升到某个程度
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL_Replieation/1-scale%20up.png?raw=true)
 
 - scale out 向外扩展，水平扩展
 
-> scale out这种扩展方式是增加服务器，架设集群
+scale out这种扩展方式是增加服务器，架设集群
 
-- 花费的代价小
-- 性能提升大
-- 如果之前是单服务器，现在组成集群还可以实现业务的高可用
+> - 花费的代价小
+> - 性能提升大
+> - 如果之前是单服务器，现在组成集群还可以实现业务的高可用
 
 标准的说：用廉价的X86组成高性能，高可用集群
 
@@ -84,4 +84,4 @@ Relay log(中继日志)其实就是Slave将Master的Bingary log日志复制过�
 - 4，SQL thread，它读取Relay log的内容，并重放。
 
 这个图只是对应最简单的主从同步，当然，多级复制也差不多这样，只是Slave也开启了Bingary log功能。
-实现的话，下一个篇将详细介绍
+实现的话，下一篇将详细介绍
