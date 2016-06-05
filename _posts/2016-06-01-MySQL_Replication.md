@@ -66,7 +66,7 @@ MySQL Replication的工作模式
 
 MySQL的主从同步是依靠MySQL的复制功能。
 
-复制原理(异步)：
+复制原理：
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL_Replieation/7_replication.png?raw=true)
 
