@@ -156,6 +156,7 @@ Slave是不能够执行写操作的，一旦写了数据，Master肯定是不能
 	
 	auto-increment-incrment ：步长，除了起步点不同之外，步长也需要调节，步长都是1的话，还是会重叠，
 	当步长为2的时候，前一个master增长为1357，后一个增长为2468，完全不会冲突
+	
 	skip_slave_start : 跳过自启动slave，改为手动启动，slaveyou 的时候需要指定一些具体数值
 
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/3_1_multi-master.jpg?raw=true)
