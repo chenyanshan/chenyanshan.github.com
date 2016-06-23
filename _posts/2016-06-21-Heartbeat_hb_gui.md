@@ -1,6 +1,6 @@
 ---
 layout: page
-title:  "LVS用Heartbeat实现高可用"
+title:  "图形界面配置HA"
 date:   2016-6-21 23:05:07
 categories: HA
 tags: HA
