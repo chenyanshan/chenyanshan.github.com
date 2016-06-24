@@ -146,7 +146,7 @@ tags: HA
 	
 	Full list of resources:
 
-使用`ansible`进行统一管理也是一种比较好的方式
+#使用`ansible`进行统一管理也是一种比较好的方式
 
 基础环境搭建好之后。就可以运行剧本了
 
