@@ -130,4 +130,4 @@ Resource指的是针对哪个IP，Score指的是倾向性有多大。INFINITY(�
 
 好了，测试我就不贴上来了，反正我这边是没有任何问题，关闭web1，资源会自动转移到web3.而不会转移到web2，反之亦然，当然2个都关闭了，就肯定落在剩下的那个身上。而当web1或者web2重新上线，资源还是会回到web1和web2
 
-准备工作可以按照这篇准备工作来:http://itcys.top/architecture/2016/06/18/LVS_3.html
+准备工作可以按照这篇的准备工作来:http://itcys.top/architecture/2016/06/18/LVS_3.html
