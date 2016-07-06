@@ -26,6 +26,7 @@ VRRP(虚拟路由冗余协议)是一个开放协议，是为了防止当一个�
 
 
 VRRP的工作过程(H3C—VRRP文档)： 
+
 	(1) 虚拟路由器中的路由器根据优先级选举出 Master。Master 路由器通过发送免 费ARP报文，将自己的虚
 	    拟MAC地址通知给与它连接的设备或者主机，从而承担报文转发任务； 
 	
@@ -121,6 +122,7 @@ Centos 6.4已经自带了keepalived软件包，可以使用yum进行安装。如
 
 
 定义一个Real Server。
+
 	virtual_server 192.168.200.100 443 { //定义VIP
 	    delay_loop 6                    //延迟几个周期再检测
 	    lb_algo rr                      //调度算法
