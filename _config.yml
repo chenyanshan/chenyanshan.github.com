@@ -2,7 +2,7 @@
 title: 陈燕山的笔记本
 email: op.chenyanshan@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
-        正式邮件请发送到邮箱: op.chenyanshan@gmail.com 非正式邮件请发送到: itcys@qq.com        
+        正式邮件请发送到邮箱: op.chenyanshan@gmail.com 非正式邮件请发送到邮箱: itcys@qq.com        
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://itcys.top" # the base hostname & protocol for your site
 twitter_username: sum
