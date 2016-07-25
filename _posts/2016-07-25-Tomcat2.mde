@@ -1,0 +1,476 @@
+---
+layout: page
+title:  "Tomcat结合Nginx or Apache实现负载均衡"
+date:   2016-7-25 16:05:07
+categories: Tomcat-LB
+tags: Tomcat-LB
+---
+
+理论在前面以及扯了一大堆了，这里就直接上世纪操作。测试架构，前端调度器可以使用apache，Nginx或者HAProxy，这个架构只结合前端调度器和Tomcat。当然，一般Tomcat是会使用Nginx与LB Proxy进行交互。也就是说Tomcat Server上面会安装Nginx，用Nginx可以在上面提供静态页面。如果是动态页面的话，就直接由Nginx交给Tomcat。
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage.png?raw=true)
+
+
+ 请求到达Server，由Nginx接收请求，然后由Nginx自带的调度机制，静态的图片和文本就自己处理，动态的JSP页面就调度给Tomcat。
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-1.png?raw=true)
+
+当然，既然Tomcat是Apache的项目，自然和Apache的结合更好，相对于Nginx只能使用http和Tomcat通信。Apache可以使用多个模块和Tomcat建立通信，不过因为Nginx在建立会话上比较高效，所以Apache与Tomcat结合使用反而相对较少，下面是通信方式比较。
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-2.png?raw=true)![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-3.png?raw=true)
+
+而且Apache和Nginx都可以实现负载均衡。
+
+# 实际操作：
+
+准备工作：
+
+iptables放行
+
+插入放行规则，后面80是端口，放行什么端口就将80改成什么端口。如果对iptables不是很熟悉，并且在操作过程中出现访问不了的问题，请关闭iptables。
+
+	LB
+	# iptables -I INPUT -d 192.168.100.20 -p tcp --dport 80 -j ACCEPT
+	# iptables -I OUTPUT -s 192.168.100.20 -p tcp --sport 80 -j ACCEPT
+	//有时候会放行8080，8009等端口，有的时候还会自己设置端口，请自行放行
+	
+	Tomcat
+	# iptables -I INPUT -s 192.168.100.20 -p tcp --dport 80 -j ACCEPT
+	# iptables -I OUTPUT -d 192.168.100.20 -p tcp --sport 80 -j ACCEPT
+	//这个地方也就端口需要注意以下。
+	
+	删除规则(实验结束之后如果不不需要上面设定的iptables规则了)
+	# iptables -L -nv --line-number   //查看编号
+	# iptables -D INPUT 1             //删除INPUT链路上面的1号规则
+	# iptables -D OUTPUT 1
+
+
+# Nginx+Tomcat
+
+## Nginx and Tomcat
+
+先说Nginx和Tomcat结合，拓扑图是这样的。
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-4.png?raw=true)
+
+Nginx的安装我就不说了，实在不会安装的可以翻翻我前面的Blog。
+
+Tomcat安装,因为我是用Ansible直接进行部署的，过程什么的非常之简单：
+
+	[root@Ansible tomcat]# tree
+	.
+	├── configFile
+	│   ├── java.sh
+	│   ├── tomcat
+	│   └── tomcat.sh
+	├── jdk_tomcat_install.retry
+	├── jdk_tomcat_install.yaml
+	└── packages
+	    ├── apache-tomcat-7.0.55.tar.gz
+	    └── jdk-7u67-linux-x64.rpm
+
+
+`jdk_tomcat_install.yaml`:
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-5.png?raw=true)
+
+	[root@Ansible tomcat]# cat configFile/java.sh
+	export JAVA_HOME=/usr/java/latest
+	export PATH=$PATH:$JAVA_HOME/bin
+	
+	[root@Ansible tomcat]# cat configFile/tomcat.sh
+	export CATALINA_HOME=/usr/local/tomcat
+	export PATH=$PATH:$CATALINA_HOME/bin
+	
+	[root@Ansible tomcat]# cat configFile/tomcat
+	#!/bin/sh
+	# Tomcat init script for Linux.
+	#
+	# chkconfig: 2345 96 14
+	# description: The Apache Tomcat servlet/JSP container.
+	 JAVA_HOME=/usr/java/latest
+	 CATALINA_HOME=/usr/local/tomcat
+	# export JAVA_HOME CATALINA_HOME
+	case $1 in
+	restart)
+	    $CATALINA_HOME/bin/catalina.sh stop
+	    sleep 2
+	    exec $CATALINA_HOME/bin/catalina.sh start
+	    ;;
+	*)                                         //除restart功能catalina.sh脚本不带之外，其他都带了，所以就只将restart独立了，
+	   exec $CATALINA_HOME/bin/catalina.sh $1  //当然status功能也不带，有兴趣的盆友可以自己写，很简单的
+	   ;;                                      //而且如果用corosync+pacemaker实现 HA 的话是必须要有status功能的
+	esac
+
+安装过程太简单了，我就把我的放这里。要是安装都不会请左转百度。
+
+修改配置文件，添加一个虚拟主机：
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-6.png?raw=true)
+
+	# mkdir -pv /web/webapps/testapp
+	# vim /web/webapps/testapp/index.jsp
+	<%@ page language="java" %>
+	<%@ page import="java.util.*" %>
+	<html>
+	  <head>
+	    <title>JSP test page.</title>
+	  </head>
+	  <body>
+	    <h1>
+	    <% out.println("mail :  itcys@qq.com"); %>
+	    </h1>
+	  </body>
+	</html>
+	# service tomcat start
+
+测试页：
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-7.png?raw=true)
+
+	$ sudo echo "192.168.100.22  itcys.top" >> /etc/hosts
+	 //Windows用户请找自己的坑....百度一下就好
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-8.png?raw=true)
+
+访问不了的童鞋请查看自己的iptables设置是否对访问机器放行
+
+
+修改Nginx：
+
+	# vim /etc/nginx/conf.d/default.conf
+		server {
+	    listen       80;
+	    server_name  itcys.top;                       //虚拟主机名为itcys.top
+	
+	    location / {
+	        root   /web/html;                         //网页地址可改可不改
+	        index  index.jsp index.html index.htm;    //加入一个index.jsp
+	    }
+	
+	    location ~ \.(jsp|do)$ {                      //以jsp或do结尾
+	        proxy_pass   http://192.168.100.22:8080;  //都将其调度到..
+	        proxy_set_header Host $http_host;         //将头部也向后面转发，因为tomcat也是设定的虚拟主机	
+	    }
+	}
+	
+	# cat /web/html/test.html    //建立好目录和测试页面 
+	<h1>Nginx static test page</h1>
+	# touch /web/html/index.jsp
+	
+	# service nginx start
+
+修改hosts文件，让itcys.top指向Nginx Proxy Server IP。
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-9.png?raw=true)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-10.png?raw=true)
+
+## Nginx Proxy + Tomcat
+
+当然我们现在准备实现的架构是这样的：
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-11.png?raw=true)
+
+这样Nginx和Tomcat就结合起来了，当然如果是在同一台主机，可以将`proxy_pass   http://192.168.100.22:8080; `改成`proxy_pass   http://127.0.0.1:8080;`当然前端调度器依然是Nginx或者HAProxy，同一主机上面放Nginx+Tomcat就是上面那个动静分离的图。当然这个时候Client和Server之间还有一层Proxy。
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-12.png?raw=true)
+
+那么整个系统的大概架构就会是上面这个架构图展示的。
+
+先将另一台Tomcat启动起来。基础配置
+
+	# scp root@192.168.100.22:/usr/local/tomcat/conf/server.xml .
+	# mkdir -pv /web/webapps/testapp
+	# vim /web/webapps/testapp/index.jsp
+	<%@ page language="java" %>
+	<%@ page import="java.util.*" %>
+	<html>
+	  <head>
+	    <title>JSP test page.</title>
+	  </head>
+	  <body>
+	    <h1>
+	    <% out.println("Tomcat 192.168.100.21"); %>   //自己进行修改
+	    </h1>
+	  </body>
+	</html>
+
+将Nginx Proxy配置修改一下。下面是需要修改的地方。
+
+	upstream TomcatServers {     //定义最精简的upstream
+	    server 192.168.100.21:8080;    //不指定weight默认为1;
+	    server 192.168.100.22:8080;
+	}                          //不指定调度算法默认为round-robin
+	server {
+	    location ~ \.(jsp|do)$ {
+	        proxy_pass   http://TomcatServers; 
+	    }
+	}
+
+效果(如果看不到效果请看下各节点time是否同步)：
+
+
+
+如果后端Tomcat上还结合了Nginx的话，那么只需要将到达前端Nginx Proxy调度到后端Nginx监听的端口上面，由Nginx再进行动静分离，但是如果后端Tomcat已经是独立的一组服务器，静态Web也是一组独立的服务器了的话，那么就需要在配置文件添加上下面的内容：
+
+	location ~ \.(html|css|js|peng|jpg|png|gif)$ {        //如果可以的话还可以细分图片和文本
+	      proxy_pass   http://WebUpstreamServers;       //都将其调度到前面定义好的Web Upstream Servers
+	      proxy_set_header Host $http_host;            
+	}
+
+这样一来，架构就会是这样：
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-13.png?raw=true)
+
+业务规模再扩大就可以加入varnish或者再建立一组图片服务器。
+
+Tomcat和Nginx的结合到这也差不多了。现在说说Apache和Tomcat的结合，
+
+# Apache+Tomcat
+
+依旧是先将结合方式，然后再讲如何将Apache作为LB Proxy。
+
+安装Apache并关闭Nginx
+
+	# service nginx stop; chkconfig nginx off
+	# yum -y install httpd
+	or
+	--enable-proxy --enable-proxy-http --enable-proxy-ajp (在编译的时候加上这些调度模块选项)
+	--enable-proxy-balancer   这个是Tomcat集群需要用到的模块
+
+Apache配置
+	# vim /etc/httpd/conf.d/tomcat.conf
+	<VirtualHost *:80>
+	    ServerName itcys.top
+		DocumentRoot "/web/staticPages"   //存放静态页面
+	    ProxyVia Off              //控制在http首部是否使用Via,用于多级代理中使用
+	    ProxyPreserveHost On      //开启Host首部转发，后端Tomcat上面部署有多个虚拟主机的时候用
+	    ProxyPass ~ .*\.(html|css|js|peng|jpg|png|gif)$ ! //静态页面不代理的方法
+	    ProxyPass / http://192.168.100.21:8080/         //将Client请求转发给Tomcat
+	    ProxyPassReverse / http://192.168.100.21:8080/  //防止Url重写之后Client无法访问内网地址
+	    <Location />
+	       Order Allow,Deny
+	       Allow from all 
+	    </Location>
+	</VirtualHost>
+
+对应Tomcat配置：
+
+	<Connector port="8080" protocol="HTTP/1.1">
+
+建立好测试页面，看效果：
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-14.png?raw=true)![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-15.png?raw=true)
+
+再进行AJP连接：
+
+Apache配置：
+
+
+	<VirtualHost *:80>
+	    ServerName itcys.top
+	    DocumentRoot "/web/staticPages"
+	    ProxyVia Off
+	    ProxyPreserveHost On
+	    ProxyPass ~ .*\.(html|css|js|peng|jpg|png|gif)$ !
+	    ProxyPass / ajp://192.168.100.21:8009/           //就将这里的http修改成了ajp
+	    ProxyPassReverse / ajp://192.168.100.21:8009/    //当然端口也要修改一下
+	    <Location />
+	       Order Allow,Deny
+	       Allow from all 
+	    </Location>
+	</VirtualHost>
+
+Tomcat配置：
+
+	<Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+
+效果和之前是一样的，我就不上图了。
+
+再来说说LB负载均衡
+
+	<Proxy balancer://tomcatCluster>   //定义一个集群，就好像Nginx定义一个upstream一样
+	    BalancerMember http://192.168.100.21:8080 loadfactor=1
+	    BalancerMember ajp://192.168.100.22:8009 loadfactor=1
+	</Proxy>                           //可以同时定义tomcat的连接方式为http或者ajp
+	 
+	<VirtualHost *:80>
+	    ServerName itcys.top
+	    DocumentRoot "/web/staticPages"
+	    ProxyVia Off
+	    ProxyPreserveHost On
+	    ProxyPass ~ .*\.(html|css|js|peng|jpg|png|gif)$ !
+	    ProxyPass / balancer://tomcatCluster/          //调用的时候协议和上面同步就好
+	    ProxyPassReverse / balancer://tomcatCluster/
+	    <Location />
+	       Order Allow,Deny
+	       Allow from all 
+	    </Location>
+	</VirtualHost>
+
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-16.png?raw=true)
+
+当然这样坑定不行，会话肯定要绑定，不然也需要后端Tomcat Session自己能处理好，后面说Tomcat实现Session保持，现在还是在调度上面下功夫
+
+Apache配置：
+
+	Header add Set-Cookie "ROUTEID=.%{BALANCER_WORKER_ROUTE}e; path=/" env=BALANCER_ROUTE_CHANGED
+	 
+	<Proxy balancer://tomcatCluster>
+	    BalancerMember http://192.168.100.21:8080 loadfactor=1 route=tomcat21
+	    BalancerMember ajp://192.168.100.22:8009 loadfactor=1 route=tomcat22
+	    ProxySet stickysession=ROUTEID
+	</Proxy>
+	 
+	<Location /tomcatClusterManager>    //定义一个监控页面
+	    SetHandler balancer-manager
+	</Location>
+	
+	<VirtualHost *:80>
+	    ServerName itcys.top
+	    DocumentRoot "/web/staticPages"
+	    ProxyVia Off
+	    ProxyPreserveHost On
+	    proxyPass /tomcatClusterManager !
+	    ProxyPass ~ .*\.(html|css|js|peng|jpg|png|gif)$ !
+	    ProxyPass / balancer://tomcatCluster/
+	    ProxyPassReverse / balancer://tomcatCluster/
+	    <Location />
+	       Order Allow,Deny
+	       Allow from all 
+	    </Location>
+	</VirtualHost>
+
+Tomcat配置：只需要在engine段加上jvmRoute=`tomcat#(和上面对应)`就行
+
+	//Tomcat 21配置
+	<Engine name="Catalina" defaultHost="localhost" jvmRoute=tomcat21>
+	______________________________________________________________________
+	Tomcat 22配置
+	<Engine name="Catalina" defaultHost="localhost" jvmRoute=tomcat22>
+
+现在就可以查看效果了，为了让效果更明显，为Tomcat提供了2个测试页面。把它们放到对应的文件夹
+
+	                  //Tomcat21 Test Page
+	
+	<%@ page language="java" %>
+	<html>
+	  <head><title>Tomcat21</title></head>
+	  <body>
+	    <h1><font color="red">Tomcat21</font></h1>
+	    <table align="centre" border="1">
+	      <tr>
+	        <td>Session ID</td>
+	    <% session.setAttribute("abc","abc"); %>
+	        <td><%= session.getId() %></td>
+	      </tr>
+	      <tr>
+	        <td>Created on</td>
+	        <td><%= session.getCreationTime() %></td>
+	     </tr>
+	    </table>
+	  </body>
+	</html>
+	
+	
+	              //Tomcat22 Test Page
+	
+	<%@ page language="java" %>
+	<html>
+	  <head><title>Tomcat22</title></head>
+	  <body>
+	    <h1><font color="blue">Tomcat22</font></h1>
+	    <table align="centre" border="1">
+	      <tr>
+	        <td>Session ID</td>
+	    <% session.setAttribute("abc","abc"); %>
+	        <td><%= session.getId() %></td>
+	      </tr>
+	      <tr>
+	        <td>Created on</td>
+	        <td><%= session.getCreationTime() %></td>
+	     </tr>
+	    </table>
+	  </body>
+	</html>
+
+效果：
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-17.png?raw=true)
+
+访问会被限制在同一个Tomcat上面,并且Session会保持
+
+管理页面：
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-18.png?raw=true)
+
+管理选项：
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-19.png?raw=true)
+
+
+Apache `mod_jk` Tomcat
+
+`mod_jk`是Apache和Tomcat的一种通信模块。可以在调度Client请求到Tomcat的时候实现负载均衡
+
+## 安装`mod_jk`
+
+软件版本:tomcat-connectors-1.2.41-src.tar.gz
+安装方式:源码编译安装
+
+	# wget http://mirrors.cnnic.cn/apache/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.41-src.tar.gz
+	# tar xf tomcat-connectors-1.2.41-src.tar.gz
+	# cd tomcat-connectors-1.2.41-src/native
+	# ./configure --with-apxs=/* 注1 */
+	# make && make install
+
+- 注1:如果你httpd是编译安装的，那么apxs就在`/usr/local/apache/bin/apxs(请按照自己的来)`，如果你的httpd是yum或者rpm安装的话，需要安装`httpd-devel`包，且apxs在`/usr/bin/apxs`
+
+	# mv tomcat.conf tomcat.conf.bak
+	# cat /etc/httpd/conf.d/mod_jk.conf
+	LoadModule  jk_module  modules/mod_jk.so   //装载上面编译的模块
+	JkWorkersFile  /etc/httpd/conf.d/workers.properties    //工作进程的配置
+	JkLogFile  logs/mod_jk.log   //日志，logs/对于路径/var/log/httpd/
+	JkLogLevel  notice           //日志级别在notice和其之上都记录
+	JkMount  /*  Tomcat21        //转发，所有内容都转发给Tomcat21(后面会定义)
+	
+	# vim /etc/httpd/conf.d/workers.properties
+	worker.list=Tomcat21            //定义一个worker
+	worker.Tomcat21.port=8009
+	worker.Tomcat21.host=192.168.100.21
+	worker.Tomcat21.type=ajp13      //ajp13表示对方支持ajp协议且运行着
+	worker.Tomcat21.lbfactor=1      //权重
+
+效果：
+
+![](https://github.com/chenyanshan/images/blob/master/linux/server/Tomcat2/DraggedImage-20.png?raw=true)
+
+### 定义集群
+
+	# cat mod_jk.conf 
+	LoadModule  jk_module  modules/mod_jk.so
+	JkWorkersFile  /etc/httpd/conf.d/workers.properties
+	JkLogFile  logs/mod_jk.log
+	JkLogLevel  notice
+	JkMount  /* tomcatCluster     //只修改了这个地方，其他都在另一个配置文件定义
+	
+	# cat workers.properties 
+	worker.list=tomcatCluster    //定义一个worker
+	worker.Tomcat21.port=8009
+	worker.Tomcat21.host=192.168.100.21
+	worker.Tomcat21.type=ajp13
+	worker.Tomcat21.lbfactor=1
+	worker.Tomcat22.port=8009
+	worker.Tomcat22.host=192.168.100.22
+	worker.Tomcat22.type=ajp13
+	worker.Tomcat22.lbfactor=1
+	worker.tomcatCluster.type = lb               //定义tomcatCluster worker type为lb
+	worker.tomcatCluster.sticky_session = 1                   //1为支持session保持
+	worker.tomcatCluster.balance_workers = Tomcat21, Tomcat22 //定义tomcatCluster包含的worker
+
+因为是保持session，所以开启了一个无痕窗口才看出效果：
+
+![](DraggedImage-21.png)
+
+好了，到这里基本上差不多了，HAProxy和Nginx差不多，所以就没说。基本上差不多，后面还有一篇讲Session持久的。也可以算是Tomcat Session HA
