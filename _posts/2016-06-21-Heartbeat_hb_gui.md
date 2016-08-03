@@ -36,7 +36,7 @@ heartbeat、heartbeat-stonith、heartbeat-pils、heartbeat-gui
 
 那就需要在`/etc/ssh/sshd_conf`中启用以下选项
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-2.png?raw=true)
+        X11Forwarding yes
 
 如果已经启用了，或者启用了没用。
 请安装桌面环境,只需要在一个节点上面安装就好
