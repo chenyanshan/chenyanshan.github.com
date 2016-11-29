@@ -152,14 +152,14 @@ HTTP1.0的时候，HTTP协议是没有HTTP持久连接 `(keepalive，在后面�
 ￼
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/3C74F383-BEA5-4D58-8310-D934607FFDE4.png?raw=true)
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/(0396BD34-44B9-4725-8B84-76FD4CD9AE5D.png?raw=true)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/0396BD34-44B9-4725-8B84-76FD4CD9AE5D.png?raw=true)
 
 和预料中的一样，出现了`TIME_WAIT`: 
 ￼
 
 测试将 `Nginx` 超时时长调整为 `120s`, 看是否不出现`TIME_WAIT` 
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/(013B3F3D-135B-458E-A504-C70821D0DF67.png?raw=true)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/013B3F3D-135B-458E-A504-C70821D0DF67.png?raw=true)
 ￼
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/269BB0A6-0EC6-4BC5-9AFF-EC8CB13E9E61.png?raw=true)
 
