@@ -152,14 +152,14 @@ HTTP1.0的时候，HTTP协议是没有HTTP持久连接 `(keepalive，在后面�
 ￼
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/3C74F383-BEA5-4D58-8310-D934607FFDE4.png?raw=true)
 
-￼![]https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/(0396BD34-44B9-4725-8B84-76FD4CD9AE5D.png?raw=true)
+![]https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/(0396BD34-44B9-4725-8B84-76FD4CD9AE5D.png?raw=true)
 
 和预料中的一样，出现了`TIME_WAIT`: 
 ￼
 
 测试将 `Nginx` 超时时长调整为 `120s`, 看是否不出现`TIME_WAIT` 
 
-￼![]https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/(013B3F3D-135B-458E-A504-C70821D0DF67.png?raw=true)
+![]https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/(013B3F3D-135B-458E-A504-C70821D0DF67.png?raw=true)
 ￼
 ![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/269BB0A6-0EC6-4BC5-9AFF-EC8CB13E9E61.png?raw=true)
 
@@ -211,7 +211,11 @@ HTTP1.0的时候，HTTP协议是没有HTTP持久连接 `(keepalive，在后面�
 到这里大家肯定对运维需要掌握的TCP/IP部分有了深入的了解。也能看懂`netstat -antl`中的那些 TCP 状态到底是什么含义了。后面会在此文的基础上讲述一下网络调优。
 
 参考资料：
+
 [The TCP/IP Guide - TCP Connection Establishment Process: The "Three-Way Handshake" ](#)
+
 [The TCP/IP Guide - TCP Connection Termination ](http://www.tcpipguide.com/free/t_TCPConnectionEstablishmentProcessTheThreeWayHandsh.htm)
+
 [Wikipedia - Transmission Control Protocol ](https://en.wikipedia.org/wiki/Transmission_Control_Protocol)
+
 `《TCP/IP详解 卷一：协议》`
