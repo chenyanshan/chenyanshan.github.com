@@ -1,4 +1,10 @@
-站在运维的角度理解 TCP connect 和 TCP 状态
+---
+layout: page
+title:  "站在运维的角度理解 TCP connect 和 TCP 状态"
+date:   2016-11-29 00:52:07
+categories: Network
+tags: Network
+---
 
 准备写一个 Linux网络调优，忽然想到很多运维对TCP/IP协议不是很了解，网上的文章也基本不是站在运维的角度来讲述，而且很多有关TCP/IP三次握手，四次断开的文章都是错的(你没有看错，很多写的似很厉害的文章，都是错的)，所以还是准备自己写一篇，也加深自己的理解。
 
