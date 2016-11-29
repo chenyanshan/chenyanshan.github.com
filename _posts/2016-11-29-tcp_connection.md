@@ -18,17 +18,17 @@ tags: Network
 第一步：
 > `Client` 会向 `Server` 发送一个有 `SYN` 标志位的TCP包，表示自己要建立TCP连接。
 
-![](WechatIMG5.jpeg)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/WechatIMG5.jpeg?raw=true)
 
 第二步： 
 > `Server` 就会返回一个 `SYN+ACK` 包， `ACK` 是确认之前 `Client` 发送过来的 `SYN` 包， `SYN` 表示自己也准备好建立连接了。
 
-![](WechatIMG5-1.jpeg)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/WechatIMG5-1.jpeg?raw=true)
 
 第三步：
 > `Client` 会向 `Server` 发送一个有 `ACK` 标志位的 TCP报文，表示自己确认 `Server` 发送过来的带 `SYN` 标志位TCP连接请求
 
-![](WechatIMG6.jpeg)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/WechatIMG6.jpeg?raw=true)
 
 在这里要仔细说明一下。`Acknowledgment number (确认序列号)` 不是 `ACK(Acknowledgment)`,这就是我一开始说的，很多人错的地方。上面我特意把`Acknowledgment number` 和 `Sequence number` 没有抹掉的原因。`Acknowledgment number` 和 `Sequence number` 就是序列号和确认序列号，用来确认序列的。而所谓的`SYN`、`ACK`。其实就是一个标志位。也就是下面图中的 `TCP Flags`，实际上就是六位二进制表示的。标志位所在位为0就是`Not set`，标志位所在位为1就是`Set`，从上面`Wireshark`抓的包也可以看出来。`0x012`不就是`001010`,对应下图不就是`ACK + SYN`吗。
 
@@ -65,22 +65,22 @@ tags: Network
 第一步：
 > `先断开端` 向 `后断开端` 发送带 `FIN` 的TCP报文，表示自己要断开这个 TCP 连接
 
-![](WechatIMG8.jpeg)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/WechatIMG8.jpeg?raw=true)
 
 第二步：
 > `后断开端` 向 `先断开端` 发送带 `ACK` 的TCP报文，表示自己已经知道对方想要断开连接了。
 
-![](WechatIMG9.jpeg)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/WechatIMG9.jpeg?raw=true)
 
 第三步：
 > `后断开端` 向 `先断开端` 发送带 `FIN` 的TCP报文，表示自己已经准备好断开连接了，可能有童鞋要问，为什么这个`FIN`为什么不和上面那个`ACK`一起就发送过去了呢？两次分开发送不是增加开销吗？这是因为`后断开端`也需要准备啊。不能你说断开就断开吧，首先我得试一试能不能断开，确定能断开了，我就会发送`FIN`确定。
 
-![](WechatIMG10.jpeg)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/WechatIMG10.jpeg?raw=true)
 
 第四步：
 > `先断开端` 向 `后断开端` 发送带 `ACK` 的TCP报文，确认自己已经断开连接，你也可以断开连接了。
 
-![](WechatIMG11.jpeg)
+![](https://github.com/chenyanshan/images/blob/master/linux/server/tcp_connection/WechatIMG11.jpeg?raw=true)
 
 我们看一下各状态的状态图：
 
