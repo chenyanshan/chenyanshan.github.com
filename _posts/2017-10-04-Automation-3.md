@@ -1,6 +1,6 @@
 ---
 layout: page
-title:  “简单自动化运维之 Zabbix 自动发现并监控”
+title:  简单自动化运维之 Zabbix 自动发现并监控
 date:   2017-10-05 20:52:07
 categories: Automation
 tags: Automation
