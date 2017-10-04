@@ -1,7 +1,7 @@
 ---
 layout: page
 title:  “简单自动化运维之 Ansible 管理多套环境"
-date:   2016-10-04 23:45:01
+date:   2017-10-04 23:45:01
 categories: Automation
 tags: Automation
 ---
