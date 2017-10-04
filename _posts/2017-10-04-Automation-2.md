@@ -8,7 +8,7 @@ tags: Automation
 
 前面一篇中已经有说明了。我现在公司需要管理的环境有三套，分别为生产环境、测试环境和审核环境。所有需要更新到生产环境的代码都必须先经由测试环境测试，测试通过了，再才能更新到生产环境。测试环境并没有外部人员进行连接，审核环境是用于 App Store 审核使用，这里就不多说了。
 
-![](/images/Automation-2/DraggedImage.png)
+![](../images/Automation-2/DraggedImage.png)
 
 上图中展示的架构，其中 Erlang Servers 和 Java Servers 每台服务器所使用的端口都不同。而在不同的环境，其所连接的数据库和 Redis 以及一些其他的配置都不同。所以需要分环境，环境下需要分组，并且各个主机都需要自己的配置。当时考虑了 Puppet 和 Ansible，但是考虑到 Puppet 太重量级，每台服务器上面都需要安装 Agentd。相比来说，Ansible 就简单多了。Ansible 理念也和当前应用场景相似，Puppet 却是类似保证最终一致性的那种。而且如果考虑到我一但离职，Ansible 交给后面的人维护也轻松些。
 
