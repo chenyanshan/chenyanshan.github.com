@@ -8,10 +8,10 @@ tags: Database
 
 mysqldump 是现在在小型企业使用最为广泛的 MySQL 备份工具，因为很多初级运维工程师基本上只能接触到它，所以我们就先来讲一下它。mysqldump 的原理很简单，就是 SELECT 把数据提取出来，但是结合不同存储引擎的其他特性，mysqldump 既可以实现温备，又可以实现热备。
 
-MySQL 版本: `5.5.56-MariaDB MariaDB Server (yum 安装)`
-Linux 版本: `CentOS 7.4 x86_64`
-SELinux 状态: `Permissive`
-Firewalld 状态: `Stop`
+- MySQL 版本: `5.5.56-MariaDB MariaDB Server (yum 安装)`
+- Linux 版本: `CentOS 7.4 x86_64`
+- SELinux 状态: `Permissive`
+- Firewalld 状态: `Stop`
 
 配置文件为默认配置文件，就添加了 binlog 的两条设置
 
@@ -104,31 +104,23 @@ Firewalld 状态: `Stop`
 ###3. 查看错误位置:
 
 	# mysqlbinlog --start-position=733 /opt/binlog/binlog.000001
-	
 	# at 804
 	#180314 10:33:29 server id 1  end_log_pos 904 	Query	thread_id=2	exec_time=0	error_code=0
 	use `test_db`/*!*/;
 	SET TIMESTAMP=1521038009/*!*/;
 	DELETE FROM test WHERE `group` = 5
-	/*!*/;
-	
 	# at 904
 	#180314 10:33:29 server id 1  end_log_pos 976 	Query	thread_id=2	exec_time=0	error_code=0
 	SET TIMESTAMP=1521038009/*!*/;
 	COMMIT
-	/*!*/;
-	
 	# at 976
 	#180314 10:33:31 server id 1  end_log_pos 1047 	Query	thread_id=2	exec_time=0	error_code=0
 	SET TIMESTAMP=1521038011/*!*/;
 	BEGIN
-	/*!*/;
-	
 	# at 1047
 	#180314 10:33:31 server id 1  end_log_pos 1152 	Query	thread_id=2	exec_time=0	error_code=0
 	SET TIMESTAMP=1521038011/*!*/;
 	DELETE FROM test WHERE `module` = "bug"
-	/*!*/;
 
 这里可以发现，错误操作为 1047，而它的上一个为 976，所以我们需要回滚到 976 就行了。
 
