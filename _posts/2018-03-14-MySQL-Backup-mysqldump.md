@@ -80,8 +80,8 @@ Firewalld 状态: `Stop`
 
 我们假设 “WHERE group = 5” 为正常操作，“WHERE `module` = "bug"” 为误操作，这个时候我们就需要回到 “WHERE group = 5” 操作后面，但是备份并没有备份到这里，所以还需要结合二进制日志进行即时点还原。
 
-## 还原操作
-1. 离线数据库
+# 还原操作
+## 1. 离线数据库
 
 如果出现误操作需要还原数据库，请千万要先将数据库离线。
 
@@ -91,7 +91,7 @@ Firewalld 状态: `Stop`
 
 即注释掉正常的 socket 文件位置（如果 APP 程序并不是和 MySQL 在同一服务器就不需要更改 socket 文件位置），并设置 MySQL 端口为非正常使用端口。当然在这样设定之后就需要手动指定 socket 位置或者 port。
 
-2. 查看备份位置：
+## 2. 查看备份位置：
 
 之前备份的时候使用了 --master-data=2 参数，现在可以看下这个参数的效果了。
 
@@ -100,7 +100,7 @@ Firewalld 状态: `Stop`
 
 这里就可以看出来 binlog 文件为 binlog.000001，log pos 为 733。
 
-3. 查看错误位置：
+## 3. 查看错误位置：
 
 	# mysqlbinlog --start-position=733 /opt/binlog/binlog.000001
 	# at 804
@@ -127,13 +127,13 @@ Firewalld 状态: `Stop`
 
 这里可以发现，错误操作为 1047，而它的上一个为 976，所以我们需要回滚到 976 就行了。
 
-4. 将 binlog 文件中正确内容导出来。
+## 4. 将 binlog 文件中正确内容导出来。
 
 	# mysqlbinlog --start-position=733 --stop-position=976 /opt/binlog/binlog.000001 > ~/binlog_backup.sql
 
 这样我们就有了完全备份文件，和后面变更过，但是是误操作之前的文件。
 
-5. 恢复
+## 5. 恢复
 
 	[root@chenyanshan ~]# mysql --socket /var/lib/mysql/mysql_temp.sock
 	Welcome to the MariaDB monitor.  Commands end with ; or \g.
@@ -174,7 +174,7 @@ Firewalld 状态: `Stop`
 - `--routines`： 备份存储过程和存储函数
 - `--triggers`： 备份触发器
 
-## 热备
+# 热备
 
 上面全部内容都只是温备。并没有涉及到热备。热备只需要一个参数就能进行，但是它需要存储引擎和事务隔离级别支持。具体来说，就是要存储引擎支持MVCC（多版本并发控制），并且事务隔离级别需要为读提交（ READ COMMITTED）和可重读（REPEATABLE READ），当满足这两个需求的时候， 每个事务启动时，存储引擎会为每个启动的事务创建一个当下时刻的快照。并且让这个快照中读到的数据的版本加一的。以后只要是这个事务读的数据，一定会去找比这个版本更老的数据。这样就能读到以前的数据。这样就能实现在施加了锁之后还不影响其他用户的读写操作。MySQL 默认存储引擎 InnoDB 就支持 MVCC，Percona Server 的 XtraDB 存储引擎也支持。
 
