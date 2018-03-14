@@ -81,7 +81,8 @@ Firewalld 状态: `Stop`
 我们假设 “WHERE group = 5” 为正常操作，“WHERE `module` = "bug"” 为误操作，这个时候我们就需要回到 “WHERE group = 5” 操作后面，但是备份并没有备份到这里，所以还需要结合二进制日志进行即时点还原。
 
 ## 还原操作
-1. 离线数据库
+
+###1. 离线数据库
 
 如果出现误操作需要还原数据库，请千万要先将数据库离线。
 
@@ -91,7 +92,7 @@ Firewalld 状态: `Stop`
 
 即注释掉正常的 socket 文件位置（如果 APP 程序并不是和 MySQL 在同一服务器就不需要更改 socket 文件位置），并设置 MySQL 端口为非正常使用端口。当然在这样设定之后就需要手动指定 socket 位置或者 port。
 
-2. 查看备份位置：
+###2. 查看备份位置：
 
 之前备份的时候使用了 --master-data=2 参数，现在可以看下这个参数的效果了。
 
@@ -100,7 +101,7 @@ Firewalld 状态: `Stop`
 
 这里就可以看出来 binlog 文件为 binlog.000001，log pos 为 733。
 
-3. 查看错误位置
+###3. 查看错误位置:
 
 	# mysqlbinlog --start-position=733 /opt/binlog/binlog.000001
 	
@@ -131,13 +132,13 @@ Firewalld 状态: `Stop`
 
 这里可以发现，错误操作为 1047，而它的上一个为 976，所以我们需要回滚到 976 就行了。
 
-4. 将 binlog 文件中正确内容导出来。
+###4. 将 binlog 文件中正确内容导出来。
 
 	# mysqlbinlog --start-position=733 --stop-position=976 /opt/binlog/binlog.000001 > ~/binlog_backup.sql
 
 这样我们就有了完全备份文件，和后面变更过，但是是误操作之前的文件。
 
-5. 恢复
+###5. 恢复
 
 	[root@chenyanshan ~]# mysql --socket /var/lib/mysql/mysql_temp.sock
 	Welcome to the MariaDB monitor.  Commands end with ; or \g.
