@@ -39,4 +39,4 @@ tags: Database
 
 这里简单的介绍了一下备份的分类，之后会讲解如何具体的实现上面介绍的这些备份方式。及它们的应用场景.
 
-[image-1]:	http://chenyanshan.com/images/MySQL-Backup-1-image/DraggedImage.png%20
+[image-1]:	http://chenyanshan.com/images/MySQL-Backup-1-image/DraggedImage.png
