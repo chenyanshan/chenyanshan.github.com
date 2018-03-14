@@ -30,6 +30,7 @@ tags: Database
 
 ![][image-1]
 
+
 如图所示，橙色线条为完全备份的时间戳，增量备份和差异备份的区别在图中展示的很明显，当然这里只是给个简单的介绍，具体如何实现，后面会具体的讲。
 
 ## 4. 根据备份的数据集
@@ -38,4 +39,4 @@ tags: Database
 
 这里简单的介绍了一下备份的分类，之后会讲解如何具体的实现上面介绍的这些备份方式。及它们的应用场景.
 
-[image-1]:	https://github.com/chenyanshan/chenyanshan.github.com/blob/master/images/MySQL-Backup-1-image/DraggedImage.png
+[image-1]:	http://chenyanshan.com/images/MySQL-Backup-1-image/DraggedImage.png%20
