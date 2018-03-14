@@ -103,6 +103,9 @@ Firewalld 状态: `Stop`
 ## 3. 查看错误位置：
 
 	# mysqlbinlog --start-position=733 /opt/binlog/binlog.000001
+	·····
+	·····
+	·····
 	# at 804
 	#180314 10:33:29 server id 1  end_log_pos 904 	Query	thread_id=2	exec_time=0	error_code=0
 	use `test_db`/*!*/;
