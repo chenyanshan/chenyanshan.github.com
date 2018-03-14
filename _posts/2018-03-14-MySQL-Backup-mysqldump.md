@@ -103,22 +103,26 @@ Firewalld 状态: `Stop`
 3. 查看错误位置
 
 	# mysqlbinlog --start-position=733 /opt/binlog/binlog.000001
+	
 	# at 804
 	#180314 10:33:29 server id 1  end_log_pos 904 	Query	thread_id=2	exec_time=0	error_code=0
 	use `test_db`/*!*/;
 	SET TIMESTAMP=1521038009/*!*/;
 	DELETE FROM test WHERE `group` = 5
 	/*!*/;
+	
 	# at 904
 	#180314 10:33:29 server id 1  end_log_pos 976 	Query	thread_id=2	exec_time=0	error_code=0
 	SET TIMESTAMP=1521038009/*!*/;
 	COMMIT
 	/*!*/;
+	
 	# at 976
 	#180314 10:33:31 server id 1  end_log_pos 1047 	Query	thread_id=2	exec_time=0	error_code=0
 	SET TIMESTAMP=1521038011/*!*/;
 	BEGIN
 	/*!*/;
+	
 	# at 1047
 	#180314 10:33:31 server id 1  end_log_pos 1152 	Query	thread_id=2	exec_time=0	error_code=0
 	SET TIMESTAMP=1521038011/*!*/;
