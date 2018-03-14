@@ -8,10 +8,10 @@ tags: Database
 
 mysqldump 是现在在小型企业使用最为广泛的 MySQL 备份工具，因为很多初级运维工程师基本上只能接触到它，所以我们就先来讲一下它。mysqldump 的原理很简单，就是 SELECT 把数据提取出来，但是结合不同存储引擎的其他特性，mysqldump 既可以实现温备，又可以实现热备。
 
-MySQL 版本: `5.5.56-MariaDB MariaDB Server (yum 安装)`
-Linux 版本: `CentOS 7.4 x86_64`
-SELinux 状态: `Permissive`
-Firewalld 状态: `Stop`
+- MySQL 版本: `5.5.56-MariaDB MariaDB Server (yum 安装)`
+- Linux 版本: `CentOS 7.4 x86_64`
+- SELinux 状态: `Permissive`
+- Firewalld 状态: `Stop`
 
 配置文件为默认配置文件，就添加了 binlog 的两条设置
 
