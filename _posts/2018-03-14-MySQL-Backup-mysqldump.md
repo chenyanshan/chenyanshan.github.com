@@ -102,9 +102,7 @@ Firewalld 状态: `Stop`
 
 3. 查看错误位置
 
-
 	# mysqlbinlog --start-position=733 /opt/binlog/binlog.000001
-
 	
 	# at 804
 	#180314 10:33:29 server id 1  end_log_pos 904 	Query	thread_id=2	exec_time=0	error_code=0
@@ -113,27 +111,23 @@ Firewalld 状态: `Stop`
 	DELETE FROM test WHERE `group` = 5
 	/*!*/;
 	
-
 	# at 904
 	#180314 10:33:29 server id 1  end_log_pos 976 	Query	thread_id=2	exec_time=0	error_code=0
 	SET TIMESTAMP=1521038009/*!*/;
 	COMMIT
 	/*!*/;
 	
-
 	# at 976
 	#180314 10:33:31 server id 1  end_log_pos 1047 	Query	thread_id=2	exec_time=0	error_code=0
 	SET TIMESTAMP=1521038011/*!*/;
 	BEGIN
 	/*!*/;
-
 	
 	# at 1047
 	#180314 10:33:31 server id 1  end_log_pos 1152 	Query	thread_id=2	exec_time=0	error_code=0
 	SET TIMESTAMP=1521038011/*!*/;
 	DELETE FROM test WHERE `module` = "bug"
 	/*!*/;
-
 
 这里可以发现，错误操作为 1047，而它的上一个为 976，所以我们需要回滚到 976 就行了。
 
@@ -179,7 +173,7 @@ Firewalld 状态: `Stop`
 
 至此，一次完整的备份外加即时点恢复就完成了。基本上 mysqldump 就这么些内容。这里再将一些 mysqldump 常用的参数列一下
 
-- ``--`flush-logs``: 滚动二进制日志，一般来说用不上，具体看情况。
+- `--flush-logs`: 滚动二进制日志，一般来说用不上，具体看情况。
 - `--events`： 备份事件调度器代码
 - `--routines`： 备份存储过程和存储函数
 - `--triggers`： 备份触发器
