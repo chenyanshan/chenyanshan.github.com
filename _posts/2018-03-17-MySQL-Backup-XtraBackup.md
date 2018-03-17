@@ -145,7 +145,6 @@ XtraBackup 备份的文件除了备份过来的文件之外，还有很多记录
 
 数据的恢复和逻辑备份的数据恢复不同，XtraBackup 的数据恢复是需要将数据库先停止的，由于数据库并没有错误，所以这里假装数据文件有问题。
 
-	[root@chenyanshan ~]# systemctl stop firewalld
 	[root@chenyanshan ~]# mv /var/lib/mysql/ /backups/mysql_datadir_file   # 先将数据文件备份
 	[root@chenyanshan ~]# innobackupex --copy-back /backups/2018-03-17_02-13-50/
 	.....
