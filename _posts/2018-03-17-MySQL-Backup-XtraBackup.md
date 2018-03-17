@@ -209,14 +209,14 @@ XtraBackup 备份的文件除了备份过来的文件之外，还有很多记录
 - `—incremental $BACKUP_DIR`: 这个参数的意义是告诉 XtrBackup，此次备份是增量备份，是以`--incremental-basedir `指定的目录为基础。`$BACKUP_DIR`是此次备份的备份目录
 - `—incremental-basedir=$BACKUP_DIR`: 这个参数是用于指定增量备份的基础目录。`$BACKUP_DIR`是基础备份目录，此次备份会以里面的 LSN 为基础再进行备份
 
-	# 再进行数据修改，再进行备份
-	[root@chenyanshan \~]# mysql
-	MariaDB [(none)]\> DELETE FROM xtrabackup.backup\_test WHERE name = "chenyanshan";
-	Query OK, 1 row affected (0.00 sec)
-	# 差异备份
-	[root@chenyanshan \~]# innobackupex --user=xb\_user --password=chenyanshan.com --incremental /backups/ --incremental-basedir=/backups/2018-03-17\_03-29-51/
-	.....
-	180317 03:33:00 completed OK!
+		# 再进行数据修改，再进行备份
+		[root@chenyanshan ~]# mysql
+		MariaDB [(none)]> DELETE FROM xtrabackup.backup_test WHERE name = "chenyanshan";
+		Query OK, 1 row affected (0.00 sec)
+		# 差异备份
+		[root@chenyanshan ~]# innobackupex --user=xb_user --password=chenyanshan.com --incremental /backups/ --incremental-basedir=backups/2018-03-17_03-29-51/
+		.....
+		180317 03:33:00 completed OK!
 
 和上面不同，上面`--incremental-basedir `指定的目录为`2018-03-17_03-27-12`，为全量备份目录，而这个指定的是`2018-03-17_03-29-51 `，是一个差异备份目录，所以这个备份也是差异备份。
 
