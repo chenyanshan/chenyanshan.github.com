@@ -1,6 +1,6 @@
 ---
 layout: page
-title:  "简单自动化运维之前置条件"
+title:  自动化运维之前置条件
 date:   2017-10-03 18:52:07
 categories: Automation 
 tags: Automation
