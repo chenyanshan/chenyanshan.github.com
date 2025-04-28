@@ -38,27 +38,27 @@ tags: Automation
 ## 规范的主机名
   这个不是必须选项，但是这个容易实现，且带来的收益不低，如果你所在的公司没有规范的主机名的话，你也可以做。小公司有小公司的命名规范，大公司应该都有自己的规范，所以我在这里简单介绍一下我现在所使用的命名规范。
 
-	192.168.1.177    cfg-mon-ssh.chenyanshan.com cms
+	192.168.1.177    cfg-mon-ssh.chenyanshan.github.io cms
 	# Production servers
-	192.168.1.172    login01.prd.chenyanshan.com login01-prd
-	192.168.1.173    login02.prd.chenyanshan.com login02-prd
-	192.168.1.174    erl01.prd.chenyanshan.com erl01-prd
-	192.168.1.175    erl02.prd.chenyanshan.com erl02-prd
-	192.168.1.178    java01.prd.chenyanshan.com java01-prd
-	192.168.1.179    java02.prd.chenyanshan.com java02-prd
-	192.168.1.182    back01.prd.chenyanshan.com back01-prd
+	192.168.1.172    login01.prd.chenyanshan.github.io login01-prd
+	192.168.1.173    login02.prd.chenyanshan.github.io login02-prd
+	192.168.1.174    erl01.prd.chenyanshan.github.io erl01-prd
+	192.168.1.175    erl02.prd.chenyanshan.github.io erl02-prd
+	192.168.1.178    java01.prd.chenyanshan.github.io java01-prd
+	192.168.1.179    java02.prd.chenyanshan.github.io java02-prd
+	192.168.1.182    back01.prd.chenyanshan.github.io back01-prd
 	# Testing servers
-	192.168.2.134    db01.tst.chenyanshan.com db01-tst
-	192.168.2.132    erl01.tst.chenyanshan.com erl01-tst
-	192.168.2.133    redis01.tst.chenyanshan.com redis01-tst
-	192.168.2.135    login01.tst.chenyanshan.com login01-tst
-	192.168.2.136    java01.tst.chenyanshan.com java01-tst
-	192.168.2.137    back01.tst.chenyanshan.com back01-tst
+	192.168.2.134    db01.tst.chenyanshan.github.io db01-tst
+	192.168.2.132    erl01.tst.chenyanshan.github.io erl01-tst
+	192.168.2.133    redis01.tst.chenyanshan.github.io redis01-tst
+	192.168.2.135    login01.tst.chenyanshan.github.io login01-tst
+	192.168.2.136    java01.tst.chenyanshan.github.io java01-tst
+	192.168.2.137    back01.tst.chenyanshan.github.io back01-tst
 	# Apple App Store examine servers
-	192.168.3.181    db01.exa.chenyanshan.com db01-exa
-	192.168.3.182    redis01.exa.chenyanshan.com redis01-exa
-	192.168.3.183    java01.exa.chenyanshan.com java01-exa
-	192.168.3.184    login01.exa.chenyanshan.com login01-exa
+	192.168.3.181    db01.exa.chenyanshan.github.io db01-exa
+	192.168.3.182    redis01.exa.chenyanshan.github.io redis01-exa
+	192.168.3.183    java01.exa.chenyanshan.github.io java01-exa
+	192.168.3.184    login01.exa.chenyanshan.github.io login01-exa
 
 出于某些方面的考虑，我将主机名替换掉了。这个集群有多个环境，在主机名里面的体现就是 `prd`, `tst`, `exa`，分别为正式环境，测试环境，审核环境。本来还应该有开发环境的，但是开发环境在本地。所以开发环境也需要一起维护的童鞋们应该知道怎么办了吧。
 

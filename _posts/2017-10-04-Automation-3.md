@@ -67,7 +67,7 @@ zabbix-server 的安装只有单台，直接安装就行，配置上面也没有
 Actions 配置中，Action 基本无用，不说它，
 Conditions 是条件，如果触发了这个条件，就执行后面的 Operations。
 由图所示，规则是 `A and B and C` ，这个规则都可以自己定义，or 和 and 可以根据需求使用。
-`Received value like back`: Received value 这个东西的具体含义我找了一圈都没找到，国内文档都是将其用来区分服务器是 Windows 还是 Linux 使用，官方文档也很模糊，最后我测试了一下，里面应该是很多的信息，比如主机名，主机内核版本等，`like back` 的意思很简单，就是 Received value 这个字符串匹配 `back` 这个字符串。如果 Received value 里面有 `back` 的字符串，它就算满足条件。这里是用于匹配主机名使用的，当然你如果填 Linux，那么所有的 Linux 服务器都会满足条件。如果你数据库服务器的主机名是 `db01.prd.chenyanshan.com`，你想匹配它，就可以用 `like db` 来匹配。
+`Received value like back`: Received value 这个东西的具体含义我找了一圈都没找到，国内文档都是将其用来区分服务器是 Windows 还是 Linux 使用，官方文档也很模糊，最后我测试了一下，里面应该是很多的信息，比如主机名，主机内核版本等，`like back` 的意思很简单，就是 Received value 这个字符串匹配 `back` 这个字符串。如果 Received value 里面有 `back` 的字符串，它就算满足条件。这里是用于匹配主机名使用的，当然你如果填 Linux，那么所有的 Linux 服务器都会满足条件。如果你数据库服务器的主机名是 `db01.prd.chenyanshan.github.io`，你想匹配它，就可以用 `like db` 来匹配。
 `Service type = Zabbix agent`：不是很重要，可填可不填，
 `Host IP = 192.168.1.1-254`： 就是自动发现规则中的 `ip range`
 

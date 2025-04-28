@@ -27,7 +27,7 @@ tags: Automation
 	|   |   `-- gamedb            # 独立变量，如需使用，需要调用 
 	|   |-- hosts                 # hosts 文件，和 /etc/ansibles/hosts 结构一样
 	|   `-- host_vars             # host独立变量文件夹
-	|       `-- java01.exa.chenyanshan.com
+	|       `-- java01.exa.chenyanshan.github.io
 	|-- prd
 	|   |-- group_vars
 	|   |   |-- all
@@ -37,10 +37,10 @@ tags: Automation
 	|   |   `-- gamedb
 	|   |-- hosts
 	|   `-- host_vars
-	|       |-- erl01.prd.chenyanshan.com
-	|       |-- erl02.prd.chenyanshan.com
-	|       |-- java01.prd.chenyanshan.com
-	|       `-- java02.prd.chenyanshan.com
+	|       |-- erl01.prd.chenyanshan.github.io
+	|       |-- erl02.prd.chenyanshan.github.io
+	|       |-- java01.prd.chenyanshan.github.io
+	|       `-- java02.prd.chenyanshan.github.io
 	`-- tst
 	    |-- group_vars
 	    |   |-- all
@@ -50,8 +50,8 @@ tags: Automation
 	    |   `-- gamedb
 	    |-- hosts
 	    `-- host_vars
-	        |-- erl01.tst.chenyanshan.com
-	        `-- java01.tst.chenyanshan.com
+	        |-- erl01.tst.chenyanshan.github.io
+	        `-- java01.tst.chenyanshan.github.io
 
 和其他实现使用同一个 `group_vars` 文件夹下面不同的文件不同，这里直接直接将环境划分成不同的能独立给 Ansible 使用的文件夹，并且用 `-i` 选项区分:
 
@@ -86,7 +86,7 @@ tags: Automation
 	# game db password
 	game_db_password: password
 	
-	$ cat environments/prd/host_vars/erl01.prd.chenyanshan.com
+	$ cat environments/prd/host_vars/erl01.prd.chenyanshan.github.io
 	---
 	work_port: 8881
 	ipv4_address: 192.168.1.174
@@ -172,7 +172,7 @@ Role 是 Ansible 里面一个非常重要的内容，它于 ansible 1.2 被引�
 到这个地方，基本上 Ansible 所实现的地方基本上就已经实现了。但是其实到这个程度，做更新还是很繁琐，因为需要更新，就需要上传必要的代码文件到服务器。生产环境更新还不频繁，但是测试环境更新实在频繁，每次更新，都由开发将文件传过来，然后再传到服务器，再更新。实在太麻烦。所以在这里就使用 SVN 的钩子脚本，让某个目录一旦更新就自动同步到服务器，而且执行更新到测试环境的操作。当然，你也可以只同步文件，不自动更新。使用 SVN 还不止便捷一个好处，在出现故障需要执行版本回退的时候，SVN 上面回退一个版本直接更新，更方便。
 
 	#!/bin/bash
-	# auther: yanshanchen@hotmail.com    website: http://chenyanshan.com
+	# auther: yanshanchen@hotmail.com    website: http://chenyanshan.github.io
 	# create time: 2017.09.15 
 	# version: 2 
 	

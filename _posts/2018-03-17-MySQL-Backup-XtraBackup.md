@@ -44,7 +44,7 @@ XtraBackup并没有在备份的过程中保证数据是一个时刻的，但是�
 
 和 mysqldump 不同，使用 XtraBackup 进行备份的数据库一般都有严格的权限设置，所以这里从权限设置开始。这里的设置为备份用户，为能备份所需要最小权限。低于这个权限就会无法备份。
 
-	MariaDB [(none)]> CREATE USER 'xb_user'@'localhost' IDENTIFIED BY 'chenyanshan.com';
+	MariaDB [(none)]> CREATE USER 'xb_user'@'localhost' IDENTIFIED BY 'chenyanshan.github.io';
 	MariaDB [(none)]> REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'xb_user'@'localhost';
 	MariaDB [(none)]> GRANT PROCESS, RELOAD, LOCK TABLES, REPLICATION CLIENT ON *.* TO "xb_user"@"localhost";
 	MariaDB [(none)]> FLUSH PRIVILEGES;
@@ -71,7 +71,7 @@ XtraBackup并没有在备份的过程中保证数据是一个时刻的，但是�
 数据备份的命令和 mysqldump 差不多。很简单
 
 	[root@chenyanshan ~]# mkdir /backups
-	[root@chenyanshan ~]# innobackupex --user=xb_user --password=chenyanshan.com /backups/
+	[root@chenyanshan ~]# innobackupex --user=xb_user --password=chenyanshan.github.io /backups/
 	....    
 	....    /* 这里省略了一大串日志 */
 	....
@@ -184,7 +184,7 @@ XtraBackup 备份的文件除了备份过来的文件之外，还有很多记录
 由于上面已经提供了数据，所以在这里就不纠结数据的问题，直接就拿之前的数据用于演示了。
 
 	[root@chenyanshan ~]# rm -rf /backups/*
-	[root@chenyanshan ~]# innobackupex --user=xb_user --password=chenyanshan.com /backups/
+	[root@chenyanshan ~]# innobackupex --user=xb_user --password=chenyanshan.github.io /backups/
 	.....
 	180317 03:27:14 completed OK!
  
@@ -201,7 +201,7 @@ XtraBackup 备份的文件除了备份过来的文件之外，还有很多记录
 	Records: 3  Duplicates: 0  Warnings: 0
 	
 	# 增量(差异)备份
-	[root@chenyanshan ~]# innobackupex --user=xb_user --password=chenyanshan.com --incremental /backups/ --incremental-basedir=/backups/2018-03-17_03-27-12/
+	[root@chenyanshan ~]# innobackupex --user=xb_user --password=chenyanshan.github.io --incremental /backups/ --incremental-basedir=/backups/2018-03-17_03-27-12/
 	.....
 	''180317 03:29:53 completed OK!
  
@@ -216,7 +216,7 @@ XtraBackup 备份的文件除了备份过来的文件之外，还有很多记录
 	MariaDB [(none)]> DELETE FROM xtrabackup.backup_test WHERE name = "chenyanshan";
 	Query OK, 1 row affected (0.00 sec)
 	# 差异备份
-	[root@chenyanshan ~]# innobackupex --user=xb_user --password=chenyanshan.com --incremental /backups/ --incremental-basedir=backups/2018-03-17_03-29-51/
+	[root@chenyanshan ~]# innobackupex --user=xb_user --password=chenyanshan.github.io --incremental /backups/ --incremental-basedir=backups/2018-03-17_03-29-51/
 	.....
 	180317 03:33:00 completed OK!
 
@@ -282,4 +282,4 @@ XtraBackup 备份的文件除了备份过来的文件之外，还有很多记录
 [1]:	https://www.percona.com/software/mysql-database/percona-xtrabackup
 [2]:	https://www.percona.com/downloads/XtraBackup/LATEST/
 
-[image-1]:	http://chenyanshan.com/images/MySQL-Backup-XtraBackup-image/DraggedImage.png
+[image-1]:	http://chenyanshan.github.io/images/MySQL-Backup-XtraBackup-image/DraggedImage.png
