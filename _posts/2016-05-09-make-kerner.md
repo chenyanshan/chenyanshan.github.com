@@ -279,7 +279,7 @@ copy bash 命令
 后面试了N回，还是启动不了，算是记一次失败的
 保存快照，下次在战
 
-[image-1]:	https://github.com/chenyanshan/images/blob/master/linux/server/DraggedImage.png?raw=true
-[image-2]:	https://github.com/chenyanshan/images/blob/master/linux/server/DraggedImage-1.png?raw=true
-[image-3]:	https://github.com/chenyanshan/images/blob/master/linux/server/DraggedImage-2.png?raw=true
-[image-4]:	https://github.com/chenyanshan/images/blob/master/linux/server/DraggedImage-3.png?raw=true
+[image-1]:	https://chenyanshan.github.io/img/linux/server/DraggedImage.png?raw=true
+[image-2]:	https://chenyanshan.github.io/img/linux/server/DraggedImage-1.png?raw=true
+[image-3]:	https://chenyanshan.github.io/img/linux/server/DraggedImage-2.png?raw=true
+[image-4]:	https://chenyanshan.github.io/img/linux/server/DraggedImage-3.png?raw=true

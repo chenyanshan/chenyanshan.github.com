@@ -15,7 +15,7 @@ tags: HA
 
 觉得麻烦的话可以用`ansible`
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage.png?raw=true)
 
 Heartbeart需要安装这四个包：
 
@@ -28,7 +28,7 @@ heartbeat、heartbeat-stonith、heartbeat-pils、heartbeat-gui
 配置xshell：
 文件--\>属性--\>隧道--\>对勾图上面的选项
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-1.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-1.png?raw=true)
 
 这个是重新登录，如果出现下面的报错
 
@@ -68,15 +68,15 @@ heartbeat、heartbeat-stonith、heartbeat-pils、heartbeat-gui
 	[root@web1 ha.d]# hb_gui
 
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-3.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-3.png?raw=true)
 
 界面图
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-4.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-4.png?raw=true)
 
 说一下我们的目标。我们模拟小型公司的Web高可用服务(当然，这个也可以放到大型架集群架构中去，不过要结合其他负载均衡或者高可用软件了)，访问不多，但是对在线时间要求又比较高。当然，你要是觉得架构图中浪费了一台Server，其实也可以将改NFS放到Web3上，不扯太远，这篇架构应用场景不是针对当前场景的，所以不要对号入座。vip指虚拟ip。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-5.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-5.png?raw=true)
 
 我再解释一下图，图中的意思很明确，使用DNS做负载均衡，负责将一个域名解析成两个IP，Web1，Web2，Web3由Heartbeat组成高可用集群，web3.itcys.top负责在web1.itcys.top或者web2.itcys.top挂掉的时候顶替其位置，其实就是将服务起来，将VIP1加到自己身上，把nfs挂载一下，把httpd服务启动起来就可以了
 
@@ -86,47 +86,47 @@ heartbeat、heartbeat-stonith、heartbeat-pils、heartbeat-gui
 
 组名字自定义
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-6.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-6.png?raw=true)
 
 取个Resource ID，然后选择RA，再之后填写参数
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-7.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-7.png?raw=true)
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-8.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-8.png?raw=true)
 
 LSB风格只需要接收start，stop，status就行，所以并不需要任何参数。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-9.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-9.png?raw=true)
 
 创建第二组`Web_group_2`
 
 除了VIP中的iflabel不一样之外(防止挂2台的情况发生，这个参数是定义网卡别名，1就是eth0:1），当然Resource ID也要不同。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-10.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-10.png?raw=true)
 
 创建位置约束(资源更倾向于那个节点上)：
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-11.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-11.png?raw=true)
 
 一共有4个。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-12.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-12.png?raw=true)
 
 Resource指的是针对哪个IP，Score指的是倾向性有多大。INFINITY(无穷大)指只要指定的机器不出问题就不转移。加上expressions语句之后，组合起来就是：`Web_group_1`中的资源只要`uname`等于`web1.itcys.top`的Server不出问题，那么就不转移
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-13.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-13.png?raw=true)
 
 `Web_group_2`中的资源只要`uname`等于`web2.itcys.top`的Server不出问题，那么就不转移
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-14.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-14.png?raw=true)
 
 `Web_group_1`中的资源在当前集群没有存在位置约束大于100的话。就把资源转移给`uname`等于`web3.itcys.top`的Server
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-15.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-15.png?raw=true)
 
 `Web_group_2`中的资源在当前集群没有存在位置约束大于100的话。就把资源转移给`uname`等于`web3.itcys.top`的Server
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/hb_gui/DraggedImage-16.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/hb_gui/DraggedImage-16.png?raw=true)
 
 好了，测试我就不贴上来了，反正我这边是没有任何问题，关闭web1，资源会自动转移到web3.而不会转移到web2，反之亦然，当然2个都关闭了，就肯定落在剩下的那个身上。而当web1或者web2重新上线，资源还是会回到web1和web2
 

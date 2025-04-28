@@ -9,21 +9,21 @@ tags: linux
 又是一群友，在群里说自己电脑在停电之后重启，虚拟机就起不来了。环境和数据都在上面
 帮她用TeamViewer弄着实在蛋疼，她就说发过来，我就愣了，这么大。发过来？不过大家都知道我喜欢助人为乐，然后我也没说啥，就接下了.
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image1.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/mysql_server_fail/image1.png?raw=true)
 
 发到百度云净10个G。幸好我有个盗版的百度云客户端，不然我还真不想50k/s的速度下载10G的东西。
 
 下载速度还是刚刚的。下载之后解压。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image2.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/mysql_server_fail/image2.png?raw=true)
 
 用PD打开还需要类似转码的步骤。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image3.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/mysql_server_fail/image3.png?raw=true)
 
 启动之后傻眼了
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image4.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/mysql_server_fail/image4.png?raw=true)
 
 什么鬼，看不懂。。不过没关心。。来思路！
 
@@ -43,11 +43,11 @@ tags: linux
 启动。。
 查看磁盘信息，sdc1是boot分区。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image4.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/mysql_server_fail/image4.png?raw=true)
 
 那就直接挂载/dev/sdc2
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image5.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/mysql_server_fail/image5.png?raw=true)
 
 报错 
 	
@@ -55,13 +55,13 @@ tags: linux
 
 LVM,那就检测一下咯，
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image6.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/mysql_server_fail/image6.png?raw=true)
 
 果然一检测就出来
 
 找到数据盘。提示不可用，
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image6.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/mysql_server_fail/image6.png?raw=true)
 
 那就修复咯。为了让别人好找到这2个错误，所以这个地方就不用图片了
 	
@@ -90,7 +90,7 @@ LVM,那就检测一下咯，
 
 挂载
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/mysql_server_fail/image7.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/mysql_server_fail/image7.png?raw=true)
 
 然后在里面找到数据库，PHP代码啥的。当然这些个都是别人的，不好展示
  

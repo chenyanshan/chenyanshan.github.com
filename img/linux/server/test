@@ -1,0 +1,388 @@
+---
+layout: page
+title:  " Tomcat理论和基础"
+date:   2016-7-25 14:05:07
+categories: Tomcat
+tags: Tomcat
+---
+
+
+说到Tomcat，就不得不说Java，Tomcat就是精简版的Java EE的(面对企业级应用)标准的实现,因为Tomcat运行时占用的系统资源小，扩展性好，支持负载均衡，PHP无论是开发模式。应用机制，API丰富程度，性能都不适合构建大规模企业应用，更为成熟的是java的类jsp，所以大型站点一般都使用jsp。
+
+Java因为其的jvm(java虚拟机)，让其能够跨平台运行，当然这个跨平台和C，python之类跨平台不同，java因为jvm的存在。在system和实际运行环境中隔了一层中间层，C，python都是没有编译之前可以跨平台，而且需要注意不要调用非公共库，而java的运行环境因为是jvm虚拟机实现的，所以java只要不调用本地方法，在编译过之后也是能够跨平台的。
+
+![](New%20Mockup%2021_4.png)
+
+
+如图所示，如果调用的API都是JVM所提供的，那么编译之后的class文件依旧能在搭建了JVM的平台上面运行。
+
+java的两种运行环境：
+
+- JRE：(普通用户)
+
+Java Runing Environment：Java运行时环境
+由JVM(Hostsport) + JavaSE API组成
+
+- JDK：(需要编译Java和Java开发者需要)
+
+包含Java程序设计语言，工具及工具API以及JRE
+
+Java的类型
+
+- Java SE：Standard Edition，J2SE
+
+融合了JDK及其他几个运行库
+支持面向桌面级应用，提供了完整的Java核心API
+ 
+- Java EE:Enterprise Edition,J2EE
+
+包含了Java SE,并额外提供了大量的企业级类库;
+支持使用多层架构的企业应用(如EJB,CRM等)
+ 
+- Java ME:Micro Edition,J2ME
+
+精简版的Java SE
+移动桌面应用使用
+
+
+Tomcat就是一个精简版的Java EE的实现方案：
+
+	JAVA EE Application Servers:
+	
+		Websphere   //IBM完整的Java EE实现，商业
+		Weblogic    //BEA->Oracle,完整的Java EE实现，商业
+		oc4j        //Oracle
+		JBoss       //被Redhat收购，开源，对tomcat进行二次封装的实现
+		JOnAS
+		Geronimo
+		Glassfish
+		 
+		Tomcat 
+		Jetty       
+		Resin
+
+
+Tomcat是由Apache软件基金会下属的Jakarta项目开发的一个Servlet容器，按照Sun Microsystems提供的技术规范，实现了对Servlet和JavaServer Page（JSP）的支持，并提供了作为Web服务器的一些特有功能，如Tomcat管理和控制平台、安全域管理和Tomcat阀等。由于Tomcat本身也内含了一个HTTP服务器，它也可以被视作一个单独的Web服务器。但是，不能将Tomcat和Apache Web服务器混淆
+
+Tomcat提供了一个Jasper编译器用以将JSP编译成对应的Servlet。
+
+说到JSP和Servlet，这就涉及到Java Web的重点了。在动态网站出现的早期，其实Tomcat和其他应用一样，动态脚本都交由Client端执行，client包涵jdk，能编译运行java代码。后来发现这种危害实在太大，只要网站的开发者有心。那么Client被攻击将会变得特别容易，这个时候Servlet就出现了。Servlet是一个类，能实现将之前交由Client的动态页面脚本由Server执行之后再将结果发送给Client，但是这种方式有一种缺陷，就跟`echo "<h1>Test Page</h1>"`这种方式一样，想开发Java Web网站，不但要会Java语言，还需要会前端。也就是所谓的硬编码的方式。这种方式实现起来痛苦无比，而且完全违背程序的理念，所以这个时候JSP这个类被开发出来，JSP在servlet前面。接受用户请求，知道哪些由servlet执行，哪些直接就转发，起到了一个分解器的作用。具体就是Jasper编译器。
+
+![](New%20Mockup%2021_7.png)
+
+服务器在获得请求的时候会先判断是否是HTML以及其他非JSP页面请求。如果是静态页面请求就直接返回资源。如果是JSP，那么就会根据jsp页面分解生成一个java文件，然后使用javac(jdk的编译器)将此文件编译，最后由JVM运行得到的class文件处理用户的请求返回响应。如果再有请求访问这jsp页面，服务器会先检查jsp文件是否被修改过，如果被修改过，则重新生成java重新编译，如果没有，就直接运行上次得到的class。由于Tomcat自带Web Sever。所以上面的程序由Tomcat自身完全可以实现。不过因为自带的Web Server性能一般，所以不建议使用，后面我会讲Tomcat相关的架构。有兴趣可以看看。
+
+差不多Tomcat基础理论到这里就差不多了。再下去就应该是开发应该了解的了，当然JVM不能算其中，JVM很多细节我们还是需要了解，不然等到以后调节JVM的参数的时候还是会知其然而不知其所以然。
+
+下面来具体讲讲Tomcat。Tomcat安装文档一抓一大把。实在没什么好讲的。我直接用ansible写了个paly book用来以后安装基础环境。现在就贴出来：
+
+	[root@Ansible tomcat]# tree
+	.
+	├── configFile
+	│   ├── java.sh
+	│   ├── tomcat
+	│   └── tomcat.sh
+	├── jdk_tomcat_install.retry
+	├── jdk_tomcat_install.yaml
+	└── packages
+	    ├── apache-tomcat-7.0.55.tar.gz
+	    └── jdk-7u67-linux-x64.rpm
+	
+	[root@Ansible tomcat]# cat jdk_tomcat_install.yaml 
+	- hosts: tomcatInstall
+	  remote_user: root
+	  vars:
+	      jdk: jdk-7u67-linux-x64.rpm
+	      tomcat: apache-tomcat-7.0.55.tar.gz
+	  tasks:
+	      - name: copy jdk packages
+	        copy: src=/ansible/tomcat/packages/{{ jdk }} dest=/tmp/{{ jdk }}
+	      - name: jdk installing 
+	        command: rpm -ivh /tmp/{{ jdk }} 
+	      - name: copy java path scripts
+	        copy: src=/ansible/tomcat/configFile/java.sh dest=/etc/profile.d/java.sh
+	      - name: source java path scripts
+	        shell: source /etc/profile.d/java.sh 
+	      - name: copy tomcat packages
+	        copy: src=/ansible/tomcat/packages/{{ tomcat }} dest=/tmp/{{ tomcat }}
+	      - name: unzip tomcat packages
+	        command: tar xf /tmp/{{ tomcat }} -C /usr/local/
+	      - name: link tomcat installing
+	        command: ln -sn /usr/local/apache-tomcat-7.0.55 /usr/local/tomcat
+	      - name: copy tomcat path scripts
+	        copy: src=/ansible/tomcat/configFile/tomcat.sh dest=/etc/profile.d/tomcat.sh
+	      - name: source tomcat path scripts
+	        shell: source /etc/profile.d/tomcat.sh 
+	      - name: copy tomcat service scripts
+	        copy: src=/ansible/tomcat/configFile/tomcat dest=/etc/rc.d/init.d/ mode=0755
+	      - name: add chkconfig list
+	        command: chkconfig --add tomcat
+	
+	[root@Ansible tomcat]# cat configFile/java.sh
+	export JAVA_HOME=/usr/java/latest
+	export PATH=$PATH:$JAVA_HOME/bin
+	
+	[root@Ansible tomcat]# cat configFile/tomcat.sh
+	export CATALINA_HOME=/usr/local/tomcat
+	export PATH=$PATH:$CATALINA_HOME/bin
+	
+	[root@Ansible tomcat]# cat configFile/tomcat
+	#!/bin/sh
+	# Tomcat init script for Linux.
+	#
+	# chkconfig: 2345 96 14
+	# description: The Apache Tomcat servlet/JSP container.
+	 JAVA_HOME=/usr/java/latest
+	 CATALINA_HOME=/usr/local/tomcat
+	# export JAVA_HOME CATALINA_HOME
+	case $1 in
+	restart)
+	    $CATALINA_HOME/bin/catalina.sh stop
+	    sleep 2
+	    exec $CATALINA_HOME/bin/catalina.sh start
+	    ;;
+	*)                                         
+	   exec $CATALINA_HOME/bin/catalina.sh $1  
+	   ;;                                      
+	esac
+
+讲下Tomcat目录结构：
+
+	# ls /usr/local/tomcat/ -p
+	bin/  conf/  lib/  LICENSE  logs/  NOTICE  RELEASE-NOTES  RUNNING.txt  temp/  webapps/  work/
+	
+	bin: 脚本及启动时用到的类
+	lib: 类库
+	conf: 配置文件
+	logs: 日志文件
+	webapps: 应用程序默认部署目录
+	work：工作目录
+	temp：临时文件目录
+	
+	# ls conf/
+	Catalina  catalina.policy  catalina.properties  context.xml  logging.properties  
+	server.xml  server.xml.bak  tomcat-users.xml  web.xml
+	
+	server.xml: 
+		主配置文件
+	context.xml：
+		每个webapp都可以有专用的配置文件，这些配置文件通常位于webapp应用程序目录下的WEB-INF目录中，
+		用于定义会话管理器、JDBC等；$CATATINA_HOME/conf/下面的为默认配置
+	web.xml：
+		每个webapp“部署”之后才能被访问；此文件则用于为所有的webapp提供默认部署相关的配置；$CATATINA_HOME/conf/下面的为默认配置
+	tomcat-users.xml：
+		用户认证的账号和密码配置文件；
+	catalina.policy：
+		当使用-security选项启动tomcat实例时会读取此配置文件来实现其安全运行策略；
+	catalina.properties：
+		Java属性的定义文件，用于设定类加载器路径等，以及一些JVM性能相关的调优参数；
+	logging.properties：
+		日志相关的配置信息；
+
+server.xml:
+
+	<?xml version='1.0' encoding='utf-8'?>
+	<Server port="8005" shutdown="SHUTDOWN">
+	  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+	  <Listener className="org.apache.catalina.core.JasperListener" />
+	  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+	  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+	  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+	
+	  <GlobalNamingResources>
+	    <Resource name="UserDatabase" auth="Container"
+	              type="org.apache.catalina.UserDatabase"
+	              description="User database that can be updated and saved"
+	              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+	              pathname="conf/tomcat-users.xml" />
+	  </GlobalNamingResources>
+	
+	  <Service name="Catalina">
+	    <Connector port="8080" protocol="HTTP/1.1"
+	               connectionTimeout="20000"
+	               redirectPort="8443" />
+	    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+	    <Engine name="Catalina" defaultHost="localhost">
+	
+	      <Realm className="org.apache.catalina.realm.LockOutRealm">
+	        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+	               resourceName="UserDatabase"/>
+	      </Realm>
+	
+	      <Host name="localhost"  appBase="webapps"
+	            unpackWARs="true" autoDeploy="true">
+	        
+	        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+	               prefix="localhost_access_log." suffix=".txt"
+	               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+	
+	      </Host>
+	    </Engine>
+	  </Service>
+	</Server>
+
+Tomcat的架构：
+Tomcat 6支持Servlet 3.0和JSP 2.1的规范，它由一组嵌套的层次和组件组成，一般可分为以下四类：
+顶级组件：位于配置层次的顶级，并且彼此间有着严格的对应关系；
+连接器：连接客户端（可以是浏览器或Web服务器）请求至Servlet容器，
+容器：可以部署webapp的组件，包含一组其它组件；
+被嵌套的组件：位于一个容器当中，但不能包含其它组件；
+服务类组件：用来关联一些组件。
+
+
+顶级组件：
+
+server：Tomcat的一个实例，通常一个JVM只能包含一个Tomcat实例，一台物理机可以运行多个JVM，一个JVM只能运行一个Server
+
+
+容器类组件：
+
+engine:核心容器，Catalina Servlet引擎，负责通过connector接受用户请求，它检查每一个请求的HTTP首部信息以辨别此请求应该发往哪个host或context，并将请求处理后的结果返回的相应的客户端。
+
+host:类似Httpd的虚拟主机，一个引擎至少要包含一个主机组件。
+
+context:一个context代表一个Web应用程序，可以指定Webapp的根目录。还可以为Webapp添加其他额外的属性。最主要的作用是便于Servlet容器能够将用户请求发往正确的位置。
+
+服务类组件组件：
+
+service：将连接器其关联至engine,一个service中可以有多个connector，但是只能有一个engine；
+
+被嵌套类组件：
+
+logger：记录组件内容的状态信息，可被继承，但是如果下级组件自己定义了logger，那么就依自定义的为准。可用于engine和host容器
+
+valver:用来拦截请求并在将其转至目标之前进行某种处理操作，Valve可以定义在任何容器类的组件中。Valve常被用来记录客户端请求、客户端IP地址和服务器等信息，
+
+Realm：用于用户的认证和授权；可用于任何容器类组件，关联一个用户认证库
+
+	UserDatabaseRealm:基于UserDatabase文件(通常是tomcat-user.xml)实现用户认证
+	MemoryRealm:使用$CATATINA_HOME/conf/tomcat-user.xml文件作认证
+	JDBCRealm:基于JDBC关联数据库，使用数据库做认证库
+
+
+![](New%20Mockup%2023_2.png)
+
+一个Server里面可以定义多个Service。Service是用来关联connector和engine的，一个Service只能有一个engine，但是一个engine可以关联多个connector，engine里面可以有多个Host容器，Host容器里面也可以有多个context，其实光说没啥用，弄了几回再过来看就一目了然了。
+
+下面讲下基础配置：
+
+	<Host name="itcys.top"  appBase="/web/webapps"
+	 //name="虚拟主机名字"   appBase＝"应用目录，可以使用基于$CATALINA_HOME的相对路径"
+		unpackWARs="true" autoDeploy="true">
+	    //unpackWARs在启用此webapps时是否对WAR格式的归档文件先进行展开，默认为true
+	    //autoDeploy：在Tomcat处于运行状态时新放置到应用目录下的文件是否自动部署；默认为true；
+	    <Context path="" docBase="testapp" reloadable="ture"/>
+	//path=""表示根，也就是itcys.top，如果是path="test"，那就是itcys.top/test
+	//docBase：此path对应的app页面路径，可以使用Host中定义的appBase的相对路径
+	//reloadable：是否允许重新加载此context相关的Web应用程序的类；默认为false；
+	</Host>
+	# ss -tunl | grep 8080
+	tcp    LISTEN     0      100                   :::8080                 :::* 
+	# mkdir /web/webapps/testapp -pv
+	# vim //web/webapps/testapp/
+	<%@ page language="java" %>
+	<%@ page import="java.util.*" %>
+	<html>
+	  <head>
+	    <title>JSP test page.</title>
+	  </head>
+	  <body>
+	    <h1>
+	    <% out.println("Tomcat 192.168.100.21"); %>
+	    </h1>
+	  </body>
+	</html>
+
+访问的时候我将hosts文件修改了一下，将`itcys.top`指向刚刚搭建好的Tomcat Server。结果访问的时候总是提示 `HTTP/1.1 500 Internal Server Error`，我打开开发者工具一看，`GET http://itcys.top:8080/test.jsp HTTP/1.1    Host: itcys.top:8080`访问的是8080端口，Host也为这个。看着烦，就用curl测试了一下。
+
+
+
+	imac:~ cys$ curl -IH "Host: itcys.top" "http://192.168.100.21:8080/index.jsp"
+	HTTP/1.1 200 OK
+	Server: Apache-Coyote/1.1
+	Set-Cookie: JSESSIONID=191BB577DC87EC3EBD19B885E08844F4; Path=/; HttpOnly
+	Content-Type: text/html;charset=ISO-8859-1
+	Content-Length: 135
+	Date: Sun, 24 Jul 2016 18:42:36 GMT
+
+访问还是没问题，如果一定要用浏览器访问，可以更改监听再8080端口Connector监听80端口，或者就将虚拟主机名字改成itcys.top:8080，还可以启用Tomcat自带浏览器，思路就在这里，具体实现也简单，我就不扯远了。
+
+
+加一个日志功能
+
+	   <Host name="itcys.top"  appBase="/web/webapps"
+	            unpackWARs="true" autoDeploy="true">
+	        <Context path="" docBase="testapp" reloadable="ture"/>
+	        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+			//directory  日志目录，可以使用基于$CATALINA_HOME目录的相对路径
+	               prefix="itcys.top_access_log." suffix=".txt"
+			//prefix=日志前缀   //suffix＝日志后缀
+	               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+			//定义日志的具体格式，有需要的读者可以研究一下。
+	   </Host>
+
+
+	# tail /usr/local/tomcat/logs/itcys.top_access_log.2016-07-25.txt
+	192.168.100.2 - - [25/Jul/2016:02:40:12 +0800] "HEAD /index.jsp HTTP/1.1" 200 -
+
+自带的Realm讲解
+
+
+	 <GlobalNamingResources>
+	    <Resource name="UserDatabase" auth="Container"
+	              type="org.apache.catalina.UserDatabase"
+	              description="User database that can be updated and saved"
+	              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+	              pathname="conf/tomcat-users.xml" />
+		      //pathname="conf/tomcat-users.xml"表示使用的认证文件
+	  </GlobalNamingResources>
+	
+	
+		  <Realm className="org.apache.catalina.realm.LockOutRealm">
+	        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+	               resourceName="UserDatabase"/>
+			//调用上面预先设定的resource
+	      </Realm>
+
+试下认证功能：
+
+访问站点：
+
+![](DraggedImage.png)
+
+提示需要认证：
+
+![](DraggedImage-1.png)
+
+点Cancel就会提示怎么操作：
+
+![](DraggedImage-2.png)
+
+上面还有权限定义。我们先定义使用一下：
+
+	# vim /usr/local/tomcat/conf/tomcat-users.xml
+	<tomcat-users>
+	  <role rolename="manager-gui"/>
+	  <role rolename="admin-gui"/>
+	  <user username="tomcat" password="tomcat" roles="tomcat,manager-gui,amdin-gui"/>
+	</tomcat-users>
+	//因为认证文件是载入内存的，所以我们要重启一下Tomcat
+	# service tomcat restart
+
+![](https://github.com/chenyanshan/images/blob/master/linux/Tomcat1/DraggedImage-3.png?raw=true)
+
+里面的功能是非常不错的，GUI界面比较简单，我还是说CLI配置，CLI配置会了，GUI配置就简单了。
+
+看下自带的连接器
+
+		<Connector port="8080" protocol="HTTP/1.1"
+	//端口，协议
+	               connectionTimeout="20000"
+			//等待客户端发送请求的超时时间，单位为ms
+	               redirectPort="8443" />
+			//redirectPort：https监听端口，应该为443的
+	    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+	//protocol="AJP/1.3" AJP是Tomcat和Apache结合使用的一种协议，后面会用到
+
+基础配置到这也差不多了，注意：这篇Blog只是适合入门用，里面有很多配置没有列出来，如果是生产环境使用，请查看自行去官方网站`tomcat.apache.org`，后面会讲到Tomcat怎么和Nginx，Apache结合，怎么加入集群中，怎么实现Session保持等。
+

@@ -29,35 +29,35 @@ Master的配置
 	- log-bin=/二进制日志存放地点(记得权限)
 	- binglog-format=二进制日志格式
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/master_1_binlog.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/master_1_binlog.jpg?raw=true)
 
 - 重启MySQL的，加入复制用户并刷新权限
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/master_3_grant_user.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/master_3_grant_user.jpg?raw=true)
 
 Slave的配置
 
 - 修改主配文件
 	- relay-log = /复制日志存放地(记得权限)
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/slaver_my_cnf.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/slaver_my_cnf.jpg?raw=true)
 
 - 连接Master,用在Master创建的userName和passWord
 - 输入START SLAVER;以启动I/O thread和SQL thread.(忘记截图了)
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/slave_2.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/slave_2.jpg?raw=true)
 
 - 查看relay日志等设置
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/slave_3_show.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/slave_3_show.jpg?raw=true)
 
 - 查看复制的详细信息
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/slave_5_show_slave_status_2.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/slave_5_show_slave_status_2.jpg?raw=true)
 
 - 效果，因为数据太小，我在Master刚一写入，Slave就同步了
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/slaver01.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/slaver01.jpg?raw=true)
 
 一从多主就和上面一样，就不介绍了。
 
@@ -73,24 +73,24 @@ Slave是不能够执行写操作的，一旦写了数据，Master肯定是不能
  
 - Maste上面安装插件并启用插件
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/master_1.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/master_1.jpg?raw=true)
 
 - Slave安装插件，并启用插件
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/slave_1.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/slave_1.jpg?raw=true)
 
 - Slave上面重启`IO_THREAD`
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/slave_stop_start.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/slave_stop_start.jpg?raw=true)
 
 - Maste查看状态
 - 好了，现在已经是成功状态了，同步原理前面已经提过了
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/master_2_2.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/master_2_2.jpg?raw=true)
 
 - 卸载方法
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/uninstall.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/uninstall.jpg?raw=true)
 
 
 三、复制过滤器
@@ -114,15 +114,15 @@ Slave是不能够执行写操作的，一旦写了数据，Master肯定是不能
  
 - 在Slave里面设置黑名单并重启数据库使其生效
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/2_slave_hei.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/2_slave_hei.jpg?raw=true)
 
 - Master创建测试库
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/2_3_Maste_create_database.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/2_3_Maste_create_database.jpg?raw=true)
 
 - Slave查看效果
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/2_4_slave_relay_database.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/2_4_slave_relay_database.jpg?raw=true)
 
 四、Multi－Master模型
 
@@ -159,20 +159,20 @@ Slave是不能够执行写操作的，一旦写了数据，Master肯定是不能
 	
 	skip_slave_start : 跳过自启动slave，改为手动启动，slaveyou 的时候需要指定一些具体数值
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/3_1_multi-master.jpg?raw=true)
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/3_2_multi-master.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/3_1_multi-master.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/3_2_multi-master.jpg?raw=true)
 
 - 两边都创建用户
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/3_4_grant.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/3_4_grant.jpg?raw=true)
 
 - 下面这张图片是为了方便才这么截图的，第二条命令中的值是第一条命令，但是两条并不在同一个服务器上面执行，第一个在第一个服务器上面执行后，第二条是给另一个服务器用的，反之亦然，
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/3_9_master_status.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/3_9_master_status.jpg?raw=true)
 
 - 查看状态,2边都需要查看
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL/bantongbu/3_5_ok.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL/bantongbu/3_5_ok.jpg?raw=true)
 
 - 完成，基本上这样随便在哪台服务器上面写。在另一条服务器上面都能立马同步
 

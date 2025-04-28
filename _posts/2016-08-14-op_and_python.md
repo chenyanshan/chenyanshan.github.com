@@ -30,13 +30,13 @@ op，也就是运维，和python关系很深，我相信很多运维刚入门的
 
 当然python（或者其他语言，py对数据在数据处理上面比较强大）对于高级运维来说是必须具备的能力，你做到了高级运维，如果在小公司，那妥妥的可以担任架构师或者运维总监(经理，管理，各种各样的头衔都有)，但是你要是进入大公司，做运维总监就必须得把开发和运维结合起来
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/op_and_python/zhaocheng33.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/op_and_python/zhaocheng33.jpg?raw=true)
 
 就像蘑菇街运维经理分享的这个经验来看，其中大部分我都能看懂，但是还是有一些是必须有一定开发经验才能对其很熟悉的内容我是懵懵懂懂的。而且像自动化运维框架，自行开发的监控程序的监控点，性能指标等等。你不会开发你确定你能把握住？
 
 重要的东西用图来展示，虽然说这个图不是我画的。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/op_and_python/a9923252b6b287e3117acb11c8063924_b.jpg?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/op_and_python/a9923252b6b287e3117acb11c8063924_b.jpg?raw=true)
 
 上面这幅图我就不做介绍了，我对其了解也不深。你认为你如果就会运维，没有深厚的开发经验，你能做到上面这幅图所展示的实现？系统架构相对来说总是那么几套。软件架构才是最根本的。
 

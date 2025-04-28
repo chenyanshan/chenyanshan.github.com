@@ -115,7 +115,7 @@ tags: HA
 
 5、创建认证密钥
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/corosync+pacemaker/1/DraggedImage.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/corosync+pacemaker/1/DraggedImage.png?raw=true)
 
 提示这个是说明你随机数不够用，可以一直敲键盘，随机数就会慢慢增多，基本上敲一会儿就行了。
 
@@ -150,19 +150,19 @@ tags: HA
 
 基础环境搭建好之后。就可以运行剧本了
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/corosync+pacemaker/1/DraggedImage-1.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/corosync+pacemaker/1/DraggedImage-1.png?raw=true)
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/corosync+pacemaker/1/DraggedImage-2.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/corosync+pacemaker/1/DraggedImage-2.png?raw=true)
 
 可以看到一些细节还是提示使用模版，不过基本上环境已经搭建好了。这个playbook还可以进行扩建。要是实际生产环境，那么其实可以先可以创建一个按照IP地址规划主机名的脚本，然后穿过去运行一下。其他的就更加容易实现了。
 
 配置文件出了点问题，使用playbook里面的tags修改一下
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/corosync+pacemaker/1/DraggedImage-3.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/corosync+pacemaker/1/DraggedImage-3.png?raw=true)
 
 直接就可以了。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/corosync+pacemaker/1/DraggedImage-4.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/corosync+pacemaker/1/DraggedImage-4.png?raw=true)
 
 搭建完成了，后面就是管理了。管理是在下一篇
 

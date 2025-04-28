@@ -41,7 +41,7 @@ VRRP的工作过程(H3C—VRRP文档)：
 	     重新选举Master。
 
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage.png?raw=true)
 
 keepalived官方给的图，它自身有内存管理，并且基于I/O复用工作，配置接口就它的配置文件/etc/keepalived/keepalived.conf，当然keepalived可以调用其它脚本，而且很多时候被调用的脚本也有配置作用
 
@@ -91,13 +91,13 @@ Centos 6.4已经自带了keepalived软件包，可以使用yum进行安装。如
 	}
 	
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-1.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-1.png?raw=true)
 
 启动服务
 
 	# ansible lvsDirectors -m shell -a "service keepalived start"
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-2.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-2.png?raw=true)
 
 由于192.168.100.11(node1节点)上面配置的优先级为100，192.168.100.12(node2节点)优先级为99，所以192.168.100.11为Master节点。
 
@@ -114,7 +114,7 @@ Centos 6.4已经自带了keepalived软件包，可以使用yum进行安装。如
 	> sleep 4 ; \
 	> ansible lvsDirectors -m shell -a "ifconfig eth0:0"|grep 192.168.100.20;\
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-3.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-3.png?raw=true)
 
 从建立backup文件和删除backup文件之后的效果，看的出来那个`weight -2`只是在脚本返回值为1时才会临时生效的配置。上面也是经过多次测试。发现需要4秒Master和Backup的角色才会转移(看IP转移)，当然也不是100%，有一次过了4S还是没有转移，测试环境:基本相当于无任何干扰的虚拟网段。因为没有真实环境，所以这个测试意义也不大。所以读者要是应用在生产环境还需要自己进行测试
 
@@ -171,7 +171,7 @@ Centos 6.4已经自带了keepalived软件包，可以使用yum进行安装。如
 - b、安装Web Service
 - c、建立Real Server测试页面。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-4.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-4.png?raw=true)
 
 	virtual_server 192.168.100.20 80 {
 	    delay_loop 6
@@ -209,7 +209,7 @@ Centos 6.4已经自带了keepalived软件包，可以使用yum进行安装。如
 	}
 
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-5.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-5.png?raw=true)
 
 	# ipvsadm -L -n
 	IP Virtual Server version 1.2.1 (size=4096)
@@ -305,11 +305,11 @@ Centos 6.4已经自带了keepalived软件包，可以使用yum进行安装。如
 
 在实例段进行调用：
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-6.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-6.png?raw=true)
 
 建立backup文件之后查看mail，
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-7.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-7.png?raw=true)
 
 这样的话，因为会自动调用脚本，所以监控起来就简单了，短信，监控软件，mail。
 
@@ -320,23 +320,23 @@ Centos 6.4已经自带了keepalived软件包，可以使用yum进行安装。如
 这里演示node1比node2性能强场景:服务只要能运行在node1上面就不要运行到node2上面去。
 
 更改notify.sh脚本。
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-8.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-8.png?raw=true)
 
 比上面就多了这3项，当然这个是node1,node2还是有所不同：
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-9.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-9.png?raw=true)
 
 node1一旦成为buckup就会立马`restart nginx`，如果能启动，那么服务就转回，但是node2一旦成为buckup就需要`stop nginx`。当然如果2节点性能一致，又不是双Master模型。其实可以让node1成为backup的时候，也进行`nginx stop`。让资源停留在node2节点上面。不过这样手动修复node1之后，资源还是会转移到node1节点上面去,除非在主配置文件中使用如果监控到nginx启动，那么`weight`增加。
 
 之后又修改了一下，stop有的时候不知道为啥停止不了
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-10.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-10.png?raw=true)
 
 所有的stop都改成了killall
 
 修改master主配置文件:
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-11.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-11.png?raw=true)
 
 script测试方法(方法肯定很多,只列出下面简单且通用的)：
 
@@ -356,23 +356,23 @@ script测试方法(方法肯定很多,只列出下面简单且通用的)：
 
 这个buckup检测nginx status的脚本：
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-12.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-12.png?raw=true)
 
 weight和上面减的不一样是因为node1开机就会成为master，然后就会启动nginx，其优先级就会是100,node2因为是backup节点，所以nginx会stop。其优先级会先减去weight，为98。当node1的nginx起不来，优先级就会是97，资源就会转移。如果2个节点weigeht减少的都一样，那么node1就算检测到Nginx停止工作,也无法成为backup,因为node2优先级至少要比node1少1，然后nginx就会死掉，集群也不会有任何其它的操作。
 
 测试：
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-13.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-13.png?raw=true)
 
 服务直接就起来了，再测试起不来的状态。将配置文件备份了。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-14.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-14.png?raw=true)
 
 这次测试是5s之后再转移的，不过上面的restart的很快。
 
 修复node1上面的nginx，启动之后资源自动转移回来。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-15.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-15.png?raw=true)
 
 # 双Master模型
 
@@ -380,13 +380,13 @@ weight和上面减的不一样是因为node1开机就会成为master，然后就
 
 配置nofity.sh脚本，这个时候就需要2组脚本，毕竟主备节点脚本不同。且2组脚本的vIP也不同。
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-16.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-16.png?raw=true)
 
 主使用:
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-17.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-17.png?raw=true)
 
 从使用: 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-18.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-18.png?raw=true)
 
 vIP另算。已经将另一组vIP给了192.168.100.30
 
@@ -494,9 +494,9 @@ node2:
 那我把重点列出来，这些都是修改过的或者是要对应的：
 
 node1:
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-19.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-19.png?raw=true)
 
 node2:
-![](https://github.com/chenyanshan/images/blob/master/linux/server/keepalived/DraggedImage-20.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/keepalived/DraggedImage-20.png?raw=true)
 
 具体我也不扯了，就是把2个实例合并在一起，忒简单了。测试了一下，效果也和预料的差不多，2个节点都运行Nginx，并且倾向性都为只要当前节点不故障就不转移，Nginx可以这样，HAproxy也差不多。其它的也感觉不难实现，当然双主模型如果要使用的话，要使用DNS进行调度，让域名解析到2个vIP上面。

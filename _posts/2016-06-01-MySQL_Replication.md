@@ -16,7 +16,7 @@ scale up是针对服务器进行硬件上的提升，这是一个非常不理想
 > - 硬件水平提升代价太大
 > - 性能只能提升到某个程度
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL_Replieation/1-scale%20up.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL_Replieation/1-scale%20up.png?raw=true)
 
 - scale out 向外扩展，水平扩展
 
@@ -32,23 +32,23 @@ MySQL Replication一般分为：
 
 - 一主一从 Master to Slave
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL_Replieation/2-master_to_slave.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL_Replieation/2-master_to_slave.png?raw=true)
 
 - 一主多从 Master to Multiple Slaves
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL_Replieation/3-master_to_multiple_slaves.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL_Replieation/3-master_to_multiple_slaves.png?raw=true)
 
 - 双主模型 Multi—Master
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL_Replieation/4-multi_master.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL_Replieation/4-multi_master.png?raw=true)
 
 - 多级复制 Master to Slave(s) to Slave(s)
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL_Replieation/5-master_to_slaves_to_slavers.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL_Replieation/5-master_to_slaves_to_slavers.png?raw=true)
 
 - 环状模型 Multi—Master Ring
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL_Replieation/6-multi-master_ring.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL_Replieation/6-multi-master_ring.png?raw=true)
 
 图中箭头指向表示数据复制方向
 都是Slave复制Master的数据，然后再向外提供查询请求
@@ -68,7 +68,7 @@ MySQL的主从同步是依靠MySQL的复制功能。
 
 复制原理：
 
-![](https://github.com/chenyanshan/images/blob/master/linux/server/MySQL_Replieation/7_replication.png?raw=true)
+![](https://chenyanshan.github.io/img/linux/server/MySQL_Replieation/7_replication.png?raw=true)
 
 MySQL除了数据文件还会有其他的日志文件，比如说事务日志，慢查询日志。
 
